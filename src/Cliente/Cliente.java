@@ -1,6 +1,5 @@
 package Cliente;
 
-import java.text.SimpleDateFormat;
 import java.util.Date;
 import DataObjects.*;
 

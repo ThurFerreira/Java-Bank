@@ -2,13 +2,14 @@ package Conta;
 
 import Cliente.Cliente;
 import DataObjects.Agencia;
+import Exceptions.SenhaIncorretaException;
 
 import java.lang.ref.Cleaner;
 import java.text.SimpleDateFormat;
 import java.util.Date;
 
 
-public class Conta {
+public abstract class Conta implements TransacoesBancarias{
 
     private int senha;
     private int isActive; //1 for active, 0 for deactivate
@@ -83,5 +84,25 @@ public class Conta {
         SimpleDateFormat formatter= new SimpleDateFormat("dd-MM-yyyy");//format patter
         Date date = new Date(System.currentTimeMillis());//System.currentTimeMillis() get the current date
         return formatter.format(date);
+    }
+
+    @Override
+    public void sacar(int senha, int valor) throws SenhaIncorretaException {
+
+    }
+
+    @Override
+    public void depositar(int senha, int valor) throws SenhaIncorretaException{
+
+    }
+
+    @Override
+    public int consultarSaldo(int senha) throws SenhaIncorretaException{
+        return 0;
+    }
+
+    @Override
+    public void efeturarPagamento(int senha, int valor, String data) throws SenhaIncorretaException{
+
     }
 }

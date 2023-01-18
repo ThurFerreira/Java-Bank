@@ -1,10 +1,11 @@
-package Conta;
+package DataObjects;
 
+import Conta.Conta;
 import Exceptions.SenhaIncorretaException;
 import java.text.SimpleDateFormat;
 import java.util.Date;
 
-public class TransacaoBancaria implements TransacoesBancarias{
+public class TransacaoBancaria{
 
     private Conta conta;
     private int valorTransacao;
@@ -45,31 +46,5 @@ public class TransacaoBancaria implements TransacoesBancarias{
         SimpleDateFormat formatter= new SimpleDateFormat("dd-MM-yyyy");//format patter
         Date date = new Date(System.currentTimeMillis());//System.currentTimeMillis() get the current date
         return formatter.format(date);
-    }
-
-    @Override
-    public void sacar(int senha, int valor) throws SenhaIncorretaException {
-        confirmaSenha(senha);;
-    }
-
-    @Override
-    public void depositar(int senha, int valor) {
-
-    }
-
-    @Override
-    public int consultarSaldo(int senha) {
-        return 0;
-    }
-
-    @Override
-    public void efeturarPagamento(int senha, int valor, String data) {
-
-    }
-
-    private void confirmaSenha(int senhaDigitada) throws SenhaIncorretaException {
-        if(conta.getSenha() != senhaDigitada){
-            throw new SenhaIncorretaException();
-        }
     }
 }

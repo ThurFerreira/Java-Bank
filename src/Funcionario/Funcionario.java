@@ -1,8 +1,7 @@
 package Funcionario;
 
-import Cliente.Pessoa;
+import DataObjects.Pessoa;
 
-import java.text.SimpleDateFormat;
 import java.util.Date;
 import DataObjects.*;
 

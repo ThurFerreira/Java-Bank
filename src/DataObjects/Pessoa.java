@@ -1,4 +1,4 @@
-package Cliente;
+package DataObjects;
 
 import DataObjects.Endereco;
 
