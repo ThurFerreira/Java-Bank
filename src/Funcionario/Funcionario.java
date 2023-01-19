@@ -23,7 +23,7 @@ public class Funcionario extends Pessoa {
         this.estadoCivil = estadoCivil;
         this.cargo = cargo;
         this.salario = salario;
-        this.dataDeIngresso = getCurrentDate();
+        this.dataDeIngresso = CurrentDate.getCurrentDate();
     }
 
     public int getRg() {

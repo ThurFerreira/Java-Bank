@@ -7,7 +7,7 @@ import Exceptions.SenhaIncorretaException;
 import java.io.Serializable;
 
 
-public class Conta implements TransacoesBancarias, CurrentDate, Serializable {
+public abstract class Conta implements TransacoesBancarias, Serializable {
 
     private int senha;
     private int isActive; //1 for active, 0 for deactivate
@@ -22,12 +22,12 @@ public class Conta implements TransacoesBancarias, CurrentDate, Serializable {
         this.isActive = 1;
         this.numeroConta = numeroConta;
         this.saldoAtual = 0;
-        this.dataAberturaConta = getCurrentDate();
+        this.dataAberturaConta = CurrentDate.getCurrentDate();
     }
 
     public Conta(int senha){
         this.senha = senha;
-        this.dataAberturaConta = getCurrentDate();
+        this.dataAberturaConta = CurrentDate.getCurrentDate();
     }
 
     public int getSenha() {

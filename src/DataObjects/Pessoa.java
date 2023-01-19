@@ -5,7 +5,7 @@ import DataObjects.Endereco;
 import java.text.SimpleDateFormat;
 import java.util.Date;
 
-public abstract class Pessoa implements CurrentDate{
+public abstract class Pessoa{
     private String cpf;
     private String nome;
     private String dataNascimento;
@@ -25,7 +25,7 @@ public abstract class Pessoa implements CurrentDate{
             this.cpf = cpfError();
         }
         this.nome = nome;
-        this.dataNascimento = formatDate(dataNascimento);
+        this.dataNascimento = CurrentDate.formatDate(dataNascimento);
     }
 
     private String cpfError() {
