@@ -5,7 +5,7 @@ import DataObjects.Endereco;
 import java.text.SimpleDateFormat;
 import java.util.Date;
 
-public abstract class Pessoa {
+public abstract class Pessoa implements CurrentDate{
     private String cpf;
     private String nome;
     private String dataNascimento;
@@ -63,19 +63,6 @@ public abstract class Pessoa {
     public void setEndereco(Endereco endereco) {
         this.endereco = endereco;
     }
-
-    protected String getCurrentDate(){
-        //getting and formatting the current account creation date
-        SimpleDateFormat formatter = new SimpleDateFormat("dd-MM-yyyy");//format patter
-        Date date = new Date(System.currentTimeMillis());//System.currentTimeMillis() get the current date
-        return formatter.format(date);
-    }
-
-    protected String formatDate(Date date){
-        SimpleDateFormat formatter= new SimpleDateFormat("dd-MM-yyyy");//format patter
-        return formatter.format(date);
-    }
-
     private static final int[] WeightCPF = {11, 10, 9, 8, 7, 6, 5, 4, 3, 2};
 
     private static boolean isValidCPF(String cpf) {

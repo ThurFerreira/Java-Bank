@@ -2,8 +2,8 @@ package Exceptions;
 
 public class SemSaldoException extends Exception{
 
-    public SemSaldoException(){
-        super("Saldo insuficiente!");
+    @Override
+    public String getMessage() {
+        return "Saldo Insuficiente para realizar a transação, verifique e tente novamente!";
     }
-
 }

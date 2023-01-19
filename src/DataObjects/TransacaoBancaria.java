@@ -40,11 +40,4 @@ public class TransacaoBancaria{
     public void setCanalPorOndeFoiFeita(String canalPorOndeFoiFeita) {
         this.canalPorOndeFoiFeita = canalPorOndeFoiFeita;
     }
-
-    private String getCurrentDate() {
-        //getting and formatting the current account creation date
-        SimpleDateFormat formatter= new SimpleDateFormat("dd-MM-yyyy");//format patter
-        Date date = new Date(System.currentTimeMillis());//System.currentTimeMillis() get the current date
-        return formatter.format(date);
-    }
 }

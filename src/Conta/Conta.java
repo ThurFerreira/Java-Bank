@@ -2,29 +2,31 @@ package Conta;
 
 import Cliente.Cliente;
 import DataObjects.Agencia;
+import DataObjects.CurrentDate;
 import Exceptions.SenhaIncorretaException;
-
-import java.lang.ref.Cleaner;
-import java.text.SimpleDateFormat;
-import java.util.Date;
+import java.io.Serializable;
 
 
-public abstract class Conta implements TransacoesBancarias{
+public class Conta implements TransacoesBancarias, CurrentDate, Serializable {
 
     private int senha;
     private int isActive; //1 for active, 0 for deactivate
     private int numeroConta;
-    private int currentBalance;
+    private int saldoAtual;
     private final String dataAberturaConta;
     private String ultimaMovimentacao;
-    private Cliente[] clientes = new Cliente[1];
     private Agencia agencia;
 
-    public Conta(int numeroConta, int senha, Cliente[] clientes, Agencia agencia){
+    public Conta(int numeroConta, int senha, Agencia agencia) {
         this.senha = senha;
         this.isActive = 1;
         this.numeroConta = numeroConta;
-        this.currentBalance = 0;
+        this.saldoAtual = 0;
+        this.dataAberturaConta = getCurrentDate();
+    }
+
+    public Conta(int senha){
+        this.senha = senha;
         this.dataAberturaConta = getCurrentDate();
     }
 
@@ -52,11 +54,11 @@ public abstract class Conta implements TransacoesBancarias{
         this.numeroConta = numeroConta;
     }*/
 
-    public int getCurrentBalance() {
-        return currentBalance;
+    public int getSaldoAtual() {
+        return saldoAtual;
     }
 
-    /*public void setCurrentBalance(int currentBalance) {
+    /*public void setSaldoAtual(int currentBalance) {
         this.currentBalance = currentBalance;
     }*/
 
@@ -69,40 +71,44 @@ public abstract class Conta implements TransacoesBancarias{
     }*/
 
     public String getUltimaMovimentacao() {
-        return ultimaMovimentacao;
+        return this.ultimaMovimentacao;
     }
-
 
 
     public void setUltimaMovimentacao(String ultimaMovimentacao) {
         this.ultimaMovimentacao = ultimaMovimentacao;
     }
 
-    private String getCurrentDate() {
-        //getting and formatting the current account creation date
-        //https://stackabuse.com/how-to-get-current-date-and-time-in-java/
-        SimpleDateFormat formatter= new SimpleDateFormat("dd-MM-yyyy");//format patter
-        Date date = new Date(System.currentTimeMillis());//System.currentTimeMillis() get the current date
-        return formatter.format(date);
-    }
-
     @Override
     public void sacar(int senha, int valor) throws SenhaIncorretaException {
+        confirmaSenha(senha);
+
+        System.out.println("senha correta, continua o saque");
+    }
+
+    @Override
+    public void depositar(int senha, int valor) throws SenhaIncorretaException {
+        confirmaSenha(senha);
 
     }
 
     @Override
-    public void depositar(int senha, int valor) throws SenhaIncorretaException{
+    public int consultarSaldo(int senha) throws SenhaIncorretaException {
+        confirmaSenha(senha);
 
-    }
-
-    @Override
-    public int consultarSaldo(int senha) throws SenhaIncorretaException{
         return 0;
     }
 
     @Override
-    public void efeturarPagamento(int senha, int valor, String data) throws SenhaIncorretaException{
+    public void efeturarPagamento(int senha, int valor, String data) throws SenhaIncorretaException {
+        confirmaSenha(senha);
 
+    }
+
+    private void confirmaSenha(int senha) throws SenhaIncorretaException {
+        confirmaSenha(senha);
+
+        if (senha != this.senha)
+            throw new SenhaIncorretaException();
     }
 }
