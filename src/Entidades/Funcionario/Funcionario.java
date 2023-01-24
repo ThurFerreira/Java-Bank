@@ -1,6 +1,6 @@
-package Funcionario;
+package Entidades.Funcionario;
 
-import DataObjects.Pessoa;
+import Entidades.Pessoa;
 
 import java.util.Date;
 import DataObjects.*;

@@ -12,9 +12,13 @@ public class TransacaoBancaria{
     private int tipoDaTransacao;//1 saque; 2 deposito; 3 consultar saldo; 4 efetuar pagamento
     private String dataDaTransacao;
     private String canalPorOndeFoiFeita;
-    public TransacaoBancaria(Conta conta, String data){
+
+    public TransacaoBancaria(Conta conta, int valorTransacao, int tipoDaTransacao, String dataDaTransacao, String canalPorOndeFoiFeita) {
         this.conta = conta;
-        conta.setUltimaMovimentacao(data);
+        this.valorTransacao = valorTransacao;
+        this.tipoDaTransacao = tipoDaTransacao;
+        this.dataDaTransacao = dataDaTransacao;
+        this.canalPorOndeFoiFeita = canalPorOndeFoiFeita;
     }
 
     public int getValorTransacao() {

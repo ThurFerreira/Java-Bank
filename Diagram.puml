@@ -1,0 +1,25 @@
+@startuml
+
+abstract class Conta
+abstract class Pessoa
+
+interface TransacoesBancarias
+
+Conta <|- TransacoesBancarias
+
+ContaCorrente <|- Conta
+ContaSalario <|- Conta
+ContaPoupanca <|- Conta
+
+Funcionario <|- Pessoa
+Gerente <|- Funcionario
+Cliente <|- Pessoa
+
+interface TransacoesBancarias {
+    Sacar()
+    Depositar()
+    EfeturarPagamento()
+    ConsultarSaldo()
+}
+
+@enduml

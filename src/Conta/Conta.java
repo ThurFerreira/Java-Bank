@@ -1,8 +1,10 @@
 package Conta;
 
-import Cliente.Cliente;
+import java.util.Date;
 import DataObjects.Agencia;
 import DataObjects.CurrentDate;
+import Exceptions.ContaDesativadaException;
+import Exceptions.SemSaldoException;
 import Exceptions.SenhaIncorretaException;
 import java.io.Serializable;
 
@@ -12,8 +14,8 @@ public abstract class Conta implements TransacoesBancarias, Serializable {
     private int senha;
     private int isActive; //1 for active, 0 for deactivate
     private int numeroConta;
-    private int saldoAtual;
-    private final String dataAberturaConta;
+    private Double saldoAtual;
+    private Date dataAberturaConta;
     private String ultimaMovimentacao;
     private Agencia agencia;
 
@@ -21,7 +23,7 @@ public abstract class Conta implements TransacoesBancarias, Serializable {
         this.senha = senha;
         this.isActive = 1;
         this.numeroConta = numeroConta;
-        this.saldoAtual = 0;
+        this.saldoAtual = 0d;
         this.dataAberturaConta = CurrentDate.getCurrentDate();
     }
 
@@ -54,7 +56,7 @@ public abstract class Conta implements TransacoesBancarias, Serializable {
         this.numeroConta = numeroConta;
     }*/
 
-    public int getSaldoAtual() {
+    public Double getSaldoAtual() {
         return saldoAtual;
     }
 
@@ -63,12 +65,8 @@ public abstract class Conta implements TransacoesBancarias, Serializable {
     }*/
 
     public String getDataAberturaConta() {
-        return dataAberturaConta;
+        return CurrentDate.showDate(this.dataAberturaConta);
     }
-
-    /*public void setDataAberturaConta(String dataAberturaConta) {
-        this.dataAberturaConta = dataAberturaConta;
-    }*/
 
     public String getUltimaMovimentacao() {
         return this.ultimaMovimentacao;
@@ -80,28 +78,40 @@ public abstract class Conta implements TransacoesBancarias, Serializable {
     }
 
     @Override
-    public void sacar(int senha, int valor) throws SenhaIncorretaException {
+    public void sacar(int senha, int valor) throws SenhaIncorretaException, SemSaldoException, ContaDesativadaException {
+        isActive();
         confirmaSenha(senha);
+        verificaSaldo(valor);
 
-        System.out.println("senha correta, continua o saque");
+        this.saldoAtual -= valor;
+
     }
 
     @Override
-    public void depositar(int senha, int valor) throws SenhaIncorretaException {
+    public void depositar(int senha, int valor) throws SenhaIncorretaException, ContaDesativadaException {
+        isActive();
         confirmaSenha(senha);
 
+        this.saldoAtual += valor;
     }
 
     @Override
-    public int consultarSaldo(int senha) throws SenhaIncorretaException {
+    public int consultarSaldo(int senha) throws SenhaIncorretaException, ContaDesativadaException {
+        isActive();
         confirmaSenha(senha);
+
+        System.out.printf("R$ %.2f\n", this.saldoAtual);
 
         return 0;
     }
 
     @Override
-    public void efeturarPagamento(int senha, int valor, String data) throws SenhaIncorretaException {
+    public void efeturarPagamento(int senha, int valor, String data) throws SenhaIncorretaException, SemSaldoException, ContaDesativadaException {
+        isActive();
         confirmaSenha(senha);
+        verificaSaldo(valor);
+
+        this.saldoAtual -= valor;
 
     }
 
@@ -110,5 +120,19 @@ public abstract class Conta implements TransacoesBancarias, Serializable {
 
         if (senha != this.senha)
             throw new SenhaIncorretaException();
+    }
+
+    private void isActive() throws ContaDesativadaException{
+
+        if(this.isActive == 0){
+            throw new ContaDesativadaException();
+        }
+    }
+
+    private void verificaSaldo(int valor) throws SemSaldoException{
+
+        if(this.saldoAtual < valor){
+            throw new SemSaldoException();
+        }
     }
 }

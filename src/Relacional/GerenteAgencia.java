@@ -1,7 +1,7 @@
 package Relacional;
 
 import DataObjects.Agencia;
-import Funcionario.Gerente;
+import Entidades.Funcionario.Gerente;
 
 public class GerenteAgencia {
     Gerente gerente;

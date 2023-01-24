@@ -1,9 +1,10 @@
-package Cliente;
+package Entidades.Cliente;
 
 import java.util.Date;
 import DataObjects.*;
+import Entidades.Pessoa;
 
-public class Cliente extends Pessoa{
+public class Cliente extends Pessoa {
     private String estadoCivil;
     private String escolaridade;
     private Agencia agencia;

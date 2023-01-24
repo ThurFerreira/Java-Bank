@@ -1,18 +1,17 @@
-import Conta.*;
+import Conta.Conta;
+import Entidades.Cliente.Cliente;
 import Exceptions.SenhaIncorretaException;
-import Funcionario.Funcionario;
-import Cliente.Cliente;
-import javax.swing.*;
+import Relacional.ClienteConta;
+import java.util.HashSet;
+import java.util.Set;
+import IN_OUT.*;
 
 public class Main {
     public static void main(String[] args) {
-        Conta conta = new Conta(123);
+        Set<ClienteConta> dataBase = new HashSet<>();
+        Set<Cliente> clientes = new HashSet<>();
+        IN_OUT.loadDatabase(dataBase);
+        IN_OUT.loadDatabase(clientes);
 
-        try {
-            conta.sacar(1233, 4);
-
-        } catch (SenhaIncorretaException e) {
-            System.out.println(e.getMessage());
-        }
     }
 }

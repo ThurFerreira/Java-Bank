@@ -3,17 +3,16 @@ package DataObjects;
 import java.text.SimpleDateFormat;
 import java.util.Date;
 
-public class CurrentDate {
+public class CurrentDate extends Date{
 
-    public static String getCurrentDate() {
+    public static Date getCurrentDate() {
         //getting and formatting the current account creation date
-        SimpleDateFormat formatter= new SimpleDateFormat("dd-MM-yyyy");//format patter
         Date date = new Date(System.currentTimeMillis());//System.currentTimeMillis() get the current date
-        return formatter.format(date);
+        return date;
     }
 
-    public static String formatDate(Date date){
-        SimpleDateFormat formatter= new SimpleDateFormat("dd-MM-yyyy");//format patter
+    public static String showDate(Date date){
+        SimpleDateFormat formatter = new SimpleDateFormat("dd-MM-yyyy");//format patter
         return formatter.format(date);
     }
 }

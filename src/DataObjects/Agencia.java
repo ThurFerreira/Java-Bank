@@ -8,17 +8,12 @@ public class Agencia {
     private String estado;
     private String bairro;
 
-    private String gerente;
-
-    public Agencia(int numero, String nome, String cidade, String estado, String bairro, String gerente) {
+    public Agencia(int numero, String nome, String cidade, String estado, String bairro) {
         this.numero = numero;
         this.nome = nome;
         this.cidade = cidade;
         this.estado = estado;
         this.bairro = bairro;
-        this.gerente = gerente;
-
-
     }
 
     public int getNumero() {
@@ -59,14 +54,6 @@ public class Agencia {
 
     public void setBairro(String bairro) {
         this.bairro = bairro;
-    }
-
-    public String getGerente() {
-        return gerente;
-    }
-
-    public void setGerente(String gerente) {
-        this.gerente = gerente;
     }
 }
 
