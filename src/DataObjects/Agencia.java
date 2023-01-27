@@ -1,5 +1,11 @@
 package DataObjects;
 
+import Entidades.Funcionario.Gerente;
+import Conta.Conta;
+import javax.imageio.ImageReader;
+import java.util.HashSet;
+import java.util.Set;
+
 public class Agencia {
 
     private int numero;
@@ -7,13 +13,17 @@ public class Agencia {
     private String cidade;
     private String estado;
     private String bairro;
+    private Gerente gerente;
+    private Set<Conta> contas;
 
-    public Agencia(int numero, String nome, String cidade, String estado, String bairro) {
+    public Agencia(int numero, String nome, String cidade, String estado, String bairro, Gerente gerente, Set<Conta> contas) {
         this.numero = numero;
         this.nome = nome;
         this.cidade = cidade;
         this.estado = estado;
         this.bairro = bairro;
+        this.gerente = gerente;
+        this.contas = contas;
     }
 
     public int getNumero() {

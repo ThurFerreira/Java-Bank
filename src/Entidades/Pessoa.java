@@ -9,24 +9,14 @@ import java.util.Date;
 public abstract class Pessoa{
     private String cpf;
     private String nome;
-    private String dataNascimento;
+    private Date dataNascimento;
     private Endereco endereco;
 
-    public Pessoa() {
-
-    }
-
-    public Pessoa(String cpf, String nome) {
+    public Pessoa(String cpf, String nome, Endereco endereco, Date dataNascimento) {
         this.cpf = cpf;
-    }
-    public Pessoa(String cpf, String nome, Endereco endereco,Date dataNascimento) {
-        if(isValidCPF(cpf)){
-            this.cpf = cpf;
-        }else{
-            this.cpf = cpfError();
-        }
         this.nome = nome;
-        this.dataNascimento = CurrentDate.formatDate(dataNascimento);
+        this.endereco = endereco;
+        this.dataNascimento = dataNascimento;
     }
 
     private String cpfError() {
@@ -49,11 +39,11 @@ public abstract class Pessoa{
         this.nome = nome;
     }
 
-    public String getDataNascimento() {
+    public Date getDataNascimento() {
         return dataNascimento;
     }
 
-    public void setDataNascimento(String dataNascimento) {
+    public void setDataNascimento(Date dataNascimento) {
         this.dataNascimento = dataNascimento;
     }
 
@@ -66,7 +56,7 @@ public abstract class Pessoa{
     }
     private static final int[] WeightCPF = {11, 10, 9, 8, 7, 6, 5, 4, 3, 2};
 
-    private static boolean isValidCPF(String cpf) {
+    public static boolean isValidCPF(String cpf) {
         cpf = cpf.trim().replace(".", "").replace("-", "");
         if (cpf.length() != 11) return false;
 
@@ -95,5 +85,15 @@ public abstract class Pessoa{
 
     protected String getFullEndereco() {
         return "endereco: " + endereco.getBairro() + ", " + endereco.getCidade() + " - " + endereco.getEstado() + '}';
+    }
+
+    @Override
+    public String toString() {
+        return "Pessoa{" +
+                "cpf='" + cpf + '\'' +
+                ", nome='" + nome + '\'' +
+                ", dataNascimento=" + dataNascimento +
+                ", endereco=" + endereco +
+                '}';
     }
 }

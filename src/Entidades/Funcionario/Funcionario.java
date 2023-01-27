@@ -13,7 +13,7 @@ public class Funcionario extends Pessoa {
     private String estadoCivil;
     private String cargo;
     private double salario;
-    private String dataDeIngresso;
+    private Date dataDeIngresso;
 
     public Funcionario(String cpf, String nome, int rg, Date dataNascimento, Endereco endereco, int numeroCTPS, char sexo, String estadoCivil, String cargo, double salario) {
         super(cpf, nome, endereco, dataNascimento);
@@ -74,11 +74,11 @@ public class Funcionario extends Pessoa {
         this.salario = salario;
     }
 
-    public String getDataDeIngresso() {
+    public Date getDataDeIngresso() {
         return dataDeIngresso;
     }
 
-    public void setDataDeIngresso(String dataDeIngresso) {
+    public void setDataDeIngresso(Date dataDeIngresso) {
         this.dataDeIngresso = dataDeIngresso;
     }
 

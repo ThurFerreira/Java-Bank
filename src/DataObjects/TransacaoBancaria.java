@@ -6,22 +6,19 @@ import java.text.SimpleDateFormat;
 import java.util.Date;
 
 public class TransacaoBancaria{
-
-    private Conta conta;
     private int valorTransacao;
     private int tipoDaTransacao;//1 saque; 2 deposito; 3 consultar saldo; 4 efetuar pagamento
-    private String dataDaTransacao;
+    private Date dataDaTransacao;
     private String canalPorOndeFoiFeita;
 
-    public TransacaoBancaria(Conta conta, int valorTransacao, int tipoDaTransacao, String dataDaTransacao, String canalPorOndeFoiFeita) {
-        this.conta = conta;
+    public TransacaoBancaria(int valorTransacao, int tipoDaTransacao, String canalPorOndeFoiFeita) {
         this.valorTransacao = valorTransacao;
         this.tipoDaTransacao = tipoDaTransacao;
-        this.dataDaTransacao = dataDaTransacao;
+        this.dataDaTransacao = CurrentDate.getCurrentDate();
         this.canalPorOndeFoiFeita = canalPorOndeFoiFeita;
     }
 
-    public int getValorTransacao() {
+    public int getValorTransacoesBancariasTransacao() {
         return valorTransacao;
     }
 
@@ -29,11 +26,11 @@ public class TransacaoBancaria{
         this.valorTransacao = valorTransacao;
     }
 
-    public String getDataDaTransacao() {
+    public Date getDataDaTransacao() {
         return dataDaTransacao;
     }
 
-    public void setDataDaTransacao(String dataDaTransacao) {
+    public void setDataDaTransacao(Date dataDaTransacao) {
         this.dataDaTransacao = dataDaTransacao;
     }
 

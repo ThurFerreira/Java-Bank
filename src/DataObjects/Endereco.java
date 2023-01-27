@@ -1,5 +1,7 @@
 package DataObjects;
 
+import java.util.Date;
+
 public class Endereco {
     private String cidade;
     private String estado;

@@ -3,10 +3,15 @@ package Conta;
 import java.util.Date;
 import DataObjects.Agencia;
 import DataObjects.CurrentDate;
+import DataObjects.TransacaoBancaria;
 import Exceptions.ContaDesativadaException;
 import Exceptions.SemSaldoException;
 import Exceptions.SenhaIncorretaException;
+import Exceptions.ValorInvalidoException;
+
 import java.io.Serializable;
+import java.util.HashSet;
+import java.util.Set;
 
 
 public abstract class Conta implements TransacoesBancarias, Serializable {
@@ -18,6 +23,7 @@ public abstract class Conta implements TransacoesBancarias, Serializable {
     private Date dataAberturaConta;
     private String ultimaMovimentacao;
     private Agencia agencia;
+    private Set<TransacaoBancaria> historico;
 
     public Conta(int numeroConta, int senha, Agencia agencia) {
         this.senha = senha;
@@ -25,11 +31,7 @@ public abstract class Conta implements TransacoesBancarias, Serializable {
         this.numeroConta = numeroConta;
         this.saldoAtual = 0d;
         this.dataAberturaConta = CurrentDate.getCurrentDate();
-    }
-
-    public Conta(int senha){
-        this.senha = senha;
-        this.dataAberturaConta = CurrentDate.getCurrentDate();
+        historico = new HashSet<TransacaoBancaria>();
     }
 
     public int getSenha() {
@@ -44,25 +46,13 @@ public abstract class Conta implements TransacoesBancarias, Serializable {
         return isActive;
     }
 
-    public void setIsActive(int isActive) {
-        this.isActive = isActive;
-    }
-
     public int getNumeroConta() {
         return numeroConta;
     }
 
-    /*public void setNumeroConta(int numeroConta) {
-        this.numeroConta = numeroConta;
-    }*/
-
     public Double getSaldoAtual() {
         return saldoAtual;
     }
-
-    /*public void setSaldoAtual(int currentBalance) {
-        this.currentBalance = currentBalance;
-    }*/
 
     public String getDataAberturaConta() {
         return CurrentDate.showDate(this.dataAberturaConta);
@@ -72,46 +62,69 @@ public abstract class Conta implements TransacoesBancarias, Serializable {
         return this.ultimaMovimentacao;
     }
 
-
-    public void setUltimaMovimentacao(String ultimaMovimentacao) {
-        this.ultimaMovimentacao = ultimaMovimentacao;
+    public Agencia getAgencia() {
+        return agencia;
     }
 
     @Override
-    public void sacar(int senha, int valor) throws SenhaIncorretaException, SemSaldoException, ContaDesativadaException {
+    public void sacar(int senha, int valor, String canal) throws SenhaIncorretaException, SemSaldoException, ContaDesativadaException, ValorInvalidoException {
         isActive();
         confirmaSenha(senha);
         verificaSaldo(valor);
 
-        this.saldoAtual -= valor;
+        //verificando valor a ser sacado
+        if(valor > 0){
+            this.saldoAtual -= valor;
+            TransacaoBancaria novaTransacao = new TransacaoBancaria(valor, 1, canal);
+            historico.add(novaTransacao);
+        }else{
+            throw new ValorInvalidoException();
+        }
 
     }
 
     @Override
-    public void depositar(int senha, int valor) throws SenhaIncorretaException, ContaDesativadaException {
+    public void depositar(int senha, int valor, String canal) throws SenhaIncorretaException, ContaDesativadaException, ValorInvalidoException{
         isActive();
         confirmaSenha(senha);
 
-        this.saldoAtual += valor;
+        //verificando valor a ser depositado
+        if(valor > 0){
+            this.saldoAtual += valor;
+            TransacaoBancaria novaTransacao = new TransacaoBancaria(valor, 1, canal);
+            historico.add(novaTransacao);
+
+        }else{
+            throw new ValorInvalidoException();
+        }
     }
 
     @Override
-    public int consultarSaldo(int senha) throws SenhaIncorretaException, ContaDesativadaException {
+    public int consultarSaldo(int senha, String canal) throws SenhaIncorretaException, ContaDesativadaException {
         isActive();
         confirmaSenha(senha);
 
         System.out.printf("R$ %.2f\n", this.saldoAtual);
+        TransacaoBancaria novaTransacao = new TransacaoBancaria(0, 1, canal);
+        historico.add(novaTransacao);
 
         return 0;
     }
 
     @Override
-    public void efeturarPagamento(int senha, int valor, String data) throws SenhaIncorretaException, SemSaldoException, ContaDesativadaException {
+    public void efeturarPagamento(int senha, int valor, String canal) throws SenhaIncorretaException, SemSaldoException, ContaDesativadaException, ValorInvalidoException {
         isActive();
         confirmaSenha(senha);
         verificaSaldo(valor);
 
-        this.saldoAtual -= valor;
+        if(valor > 0){
+            this.saldoAtual += valor;
+            TransacaoBancaria novaTransacao = new TransacaoBancaria(valor, 1, canal);
+            historico.add(novaTransacao);
+
+        }else{
+            throw new ValorInvalidoException();
+        }
 
     }
 
