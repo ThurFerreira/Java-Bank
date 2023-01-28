@@ -3,7 +3,9 @@ package Relacional;
 import Entidades.Cliente.Cliente;
 import Conta.Conta;
 
-public class ClienteConta {
+import java.io.Serializable;
+
+public class ClienteConta implements Serializable {
     private Cliente cliente;
     private Conta conta;
 
@@ -18,5 +20,13 @@ public class ClienteConta {
 
     public Conta getConta() {
         return conta;
+    }
+
+    @Override
+    public String toString() {
+        return "ClienteConta{" +
+                "cliente=" + cliente.toString() +
+                ", conta=" + conta.toString() +
+                '}';
     }
 }

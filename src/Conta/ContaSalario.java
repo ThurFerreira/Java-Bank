@@ -1,6 +1,11 @@
 package Conta;
 
 import DataObjects.Agencia;
+import DataObjects.TransacaoBancaria;
+import Exceptions.ContaDesativadaException;
+import Exceptions.SemSaldoException;
+import Exceptions.SenhaIncorretaException;
+import Exceptions.ValorInvalidoException;
 
 public class ContaSalario extends Conta{
 
@@ -27,5 +32,22 @@ public class ContaSalario extends Conta{
 
     public void setLimiteSaque(int limiteSaque) {
         this.limiteSaque = limiteSaque;
+    }
+
+    @Override
+    public void sacar(int senha, int valor, String canal) throws SenhaIncorretaException, SemSaldoException, ContaDesativadaException, ValorInvalidoException {
+        isActive();
+        confirmaSenha(senha);
+        verificaSaldo(valor);
+
+        //verificando valor a ser sacado
+        if(valor > 0 && valor <= this.limiteSaque){
+            super.saldoAtual -= valor;
+            TransacaoBancaria novaTransacao = new TransacaoBancaria(valor, 1, canal);
+            historico.add(novaTransacao);
+
+        }else{
+            throw new ValorInvalidoException();
+        }
     }
 }

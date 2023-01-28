@@ -1,37 +1,39 @@
 package DataObjects;
 
+import Entidades.Funcionario.Funcionario;
 import Entidades.Funcionario.Gerente;
 import Conta.Conta;
 import javax.imageio.ImageReader;
+import java.io.Serializable;
+import java.util.ArrayList;
 import java.util.HashSet;
+import java.util.List;
 import java.util.Set;
 
-public class Agencia {
+public class Agencia implements Serializable {
 
-    private int numero;
+    private int numeroAgencia;
     private String nome;
-    private String cidade;
-    private String estado;
-    private String bairro;
+    private Endereco endereco;
     private Gerente gerente;
-    private Set<Conta> contas;
+    private List<Conta> contas;
+    private List<Funcionario> funcionarios;
 
-    public Agencia(int numero, String nome, String cidade, String estado, String bairro, Gerente gerente, Set<Conta> contas) {
-        this.numero = numero;
+    public Agencia(int numeroAgencia, String nome, Endereco endereco, Gerente gerente) {
+        this.numeroAgencia = numeroAgencia;
         this.nome = nome;
-        this.cidade = cidade;
-        this.estado = estado;
-        this.bairro = bairro;
+        this.endereco = endereco;
         this.gerente = gerente;
-        this.contas = contas;
+        this.contas = new ArrayList<Conta>();
+        this.funcionarios = new ArrayList<Funcionario>();
     }
 
     public int getNumero() {
-        return numero;
+        return numeroAgencia;
     }
 
     public void setNumero(int numero) {
-        this.numero = numero;
+        this.numeroAgencia = numero;
     }
 
     public String getNome() {
@@ -42,28 +44,8 @@ public class Agencia {
         this.nome = nome;
     }
 
-    public String getCidade() {
-        return cidade;
-    }
-
-    public void setCidade(String cidade) {
-        this.cidade = cidade;
-    }
-
-    public String getEstado() {
-        return estado;
-    }
-
-    public void setEstado(String estado) {
-        this.estado = estado;
-    }
-
-    public String getBairro() {
-        return bairro;
-    }
-
-    public void setBairro(String bairro) {
-        this.bairro = bairro;
+    public void setContaToAgencia(Conta newConta){
+        contas.add(newConta);
     }
 }
 

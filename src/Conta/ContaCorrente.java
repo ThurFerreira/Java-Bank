@@ -2,6 +2,8 @@ package Conta;
 
 import DataObjects.Agencia;
 
+import java.io.Serializable;
+
 public class ContaCorrente extends Conta{
 
     private int limiteDoChequeEspecial;

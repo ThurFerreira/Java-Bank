@@ -1,6 +1,7 @@
 package Conta;
 
-import java.util.Date;
+import java.util.*;
+
 import DataObjects.Agencia;
 import DataObjects.CurrentDate;
 import DataObjects.TransacaoBancaria;
@@ -10,20 +11,18 @@ import Exceptions.SenhaIncorretaException;
 import Exceptions.ValorInvalidoException;
 
 import java.io.Serializable;
-import java.util.HashSet;
-import java.util.Set;
 
 
 public abstract class Conta implements TransacoesBancarias, Serializable {
 
-    private int senha;
-    private int isActive; //1 for active, 0 for deactivate
-    private int numeroConta;
-    private Double saldoAtual;
-    private Date dataAberturaConta;
-    private String ultimaMovimentacao;
-    private Agencia agencia;
-    private Set<TransacaoBancaria> historico;
+    protected int senha;
+    protected int isActive; //1 for active, 0 for deactivate
+    protected int numeroConta;
+    protected Double saldoAtual;
+    protected Date dataAberturaConta;
+    protected String ultimaMovimentacao;
+    protected Agencia agencia;
+    protected List<TransacaoBancaria> historico;
 
     public Conta(int numeroConta, int senha, Agencia agencia) {
         this.senha = senha;
@@ -31,7 +30,7 @@ public abstract class Conta implements TransacoesBancarias, Serializable {
         this.numeroConta = numeroConta;
         this.saldoAtual = 0d;
         this.dataAberturaConta = CurrentDate.getCurrentDate();
-        historico = new HashSet<TransacaoBancaria>();
+        historico = new ArrayList<TransacaoBancaria>();
     }
 
     public int getSenha() {
@@ -128,24 +127,38 @@ public abstract class Conta implements TransacoesBancarias, Serializable {
 
     }
 
-    private void confirmaSenha(int senha) throws SenhaIncorretaException {
+    protected void confirmaSenha(int senha) throws SenhaIncorretaException {
         confirmaSenha(senha);
 
         if (senha != this.senha)
             throw new SenhaIncorretaException();
     }
 
-    private void isActive() throws ContaDesativadaException{
+    protected void isActive() throws ContaDesativadaException{
 
         if(this.isActive == 0){
             throw new ContaDesativadaException();
         }
     }
 
-    private void verificaSaldo(int valor) throws SemSaldoException{
+    protected void verificaSaldo(int valor) throws SemSaldoException{
 
         if(this.saldoAtual < valor){
             throw new SemSaldoException();
         }
+    }
+
+    @Override
+    public String toString() {
+        return "Conta{" +
+                "senha=" + senha +
+                ", isActive=" + isActive +
+                ", numeroConta=" + numeroConta +
+                ", saldoAtual=" + saldoAtual +
+                ", dataAberturaConta=" + dataAberturaConta +
+                ", ultimaMovimentacao='" + ultimaMovimentacao + '\'' +
+                ", agencia=" + agencia +
+                ", historico=" + historico +
+                '}';
     }
 }

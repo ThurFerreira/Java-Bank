@@ -7,17 +7,14 @@ import Relacional.ClienteConta;
 import Entidades.Pessoa;
 
 import java.io.*;
-import java.util.HashSet;
-import java.util.Iterator;
-import java.util.Objects;
-import java.util.Set;
+import java.util.*;
 
 public class IN_OUT {
-    public static void addClienteContaToDataBase(ClienteConta novaConta) throws IOException{
+    public static void addClienteContaToDataBase(ClienteConta novaConta){
 
         //abrindo streams
-            FileOutputStream arq = new FileOutputStream("ClienteContaDataBase.dat", false);
-            //FileOutputStream arq = new FileOutputStream("ClienteContaDataBase.dat");
+        try {
+            FileOutputStream arq = new FileOutputStream("ClienteContaDataBase.dat");
             ObjectOutputStream os = new ObjectOutputStream(arq);
 
             //escrevendo o objeto no arquivo
@@ -25,22 +22,34 @@ public class IN_OUT {
 
             //fechando arquivo
             os.close();
+
+        } catch (IOException e) {
+            throw new RuntimeException(e);
+        }
     }
-    public static void addClienteToDataBase(Cliente novaConta) throws IOException{
+    public static void addClienteToDataBase(Cliente novaConta){
 
         //abrindo streams
-        FileOutputStream arq = new FileOutputStream("ClienteDataBase.dat");
-        ObjectOutputStream os = new ObjectOutputStream(arq);
+        try {
+            FileOutputStream arq = new FileOutputStream("ClienteDataBase.dat");
+            ObjectOutputStream os = new ObjectOutputStream(arq);
 
-        //escrevendo o objeto no arquivo
-        os.writeObject(novaConta);
+            //escrevendo o objeto no arquivo
+            os.writeObject(novaConta);
 
-        //fechando arquivo
-        os.close();
-        arq.close();
+            //fechando arquivo
+            os.close();
+            arq.close();
+
+        } catch (FileNotFoundException e) {
+            System.out.println("Arquivo nao encontrado!");
+
+        } catch (IOException e) {
+            throw new RuntimeException(e);
+        }
     }
 
-    public static void loadClienteDatabase(Set<Cliente> dataBase){
+    public static void loadClienteDatabase(List<Cliente> dataBase){
         //readfrom file
         Cliente newCliente;
 
@@ -50,7 +59,6 @@ public class IN_OUT {
 
             while((newCliente = (Cliente) in.readObject()) != null){
                 dataBase.add(newCliente);
-                System.out.println("do banco" + newCliente.toString());
             }
 
             in.close();
@@ -68,16 +76,17 @@ public class IN_OUT {
 
     }
 
-    public static void loadClienteContaDatabase(Set<ClienteConta> dataBase){
+    public static void loadClienteContaDatabase(List<ClienteConta> dataBase){
         //readfrom file
-        ClienteConta novaConta;
+        ClienteConta newConta;
 
         try {
             FileInputStream arq = new FileInputStream("ClienteContaDataBase.dat");
             ObjectInputStream in = new ObjectInputStream(arq);
 
-            while((novaConta = (ClienteConta) in.readObject()) != null){
-                dataBase.add(novaConta);
+            while((newConta = (ClienteConta) in.readObject()) != null){
+                dataBase.add(newConta);
+                System.out.println(newConta);
             }
 
             in.close();
@@ -92,14 +101,6 @@ public class IN_OUT {
         } catch (ClassNotFoundException e) {
             System.out.println(e.getMessage());
         }
-    }
-
-    public void loadAgecia(Set<Agencia> agencias){
-
-    }
-
-    public void atualizaAgencia(){
-
     }
 
     public void atualizaDB(){
