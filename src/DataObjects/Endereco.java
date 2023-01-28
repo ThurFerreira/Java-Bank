@@ -1,13 +1,14 @@
 package DataObjects;
 
+import java.io.Serializable;
 import java.util.Date;
 
-public class Endereco {
+public class Endereco implements Serializable {
     private String cidade;
     private String estado;
     private String bairro;
 
-    public Endereco(String cidade, String estado, String bairro) {
+    public Endereco(String cidade, String estado, String bairro){
         this.cidade = cidade;
         this.estado = estado;
         this.bairro = bairro;

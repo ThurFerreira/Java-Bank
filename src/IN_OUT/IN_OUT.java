@@ -16,14 +16,12 @@ public class IN_OUT {
     public static void addClienteContaToDataBase(ClienteConta novaConta) throws IOException{
 
         //abrindo streams
-            FileOutputStream arq = new FileOutputStream("ClienteContaDataBase.dat");
+            FileOutputStream arq = new FileOutputStream("ClienteContaDataBase.dat", false);
+            //FileOutputStream arq = new FileOutputStream("ClienteContaDataBase.dat");
             ObjectOutputStream os = new ObjectOutputStream(arq);
 
             //escrevendo o objeto no arquivo
             os.writeObject(novaConta);
-
-            //atualizando o arquivo
-            os.flush();
 
             //fechando arquivo
             os.close();
@@ -39,6 +37,7 @@ public class IN_OUT {
 
         //fechando arquivo
         os.close();
+        arq.close();
     }
 
     public static void loadClienteDatabase(Set<Cliente> dataBase){
@@ -51,7 +50,11 @@ public class IN_OUT {
 
             while((newCliente = (Cliente) in.readObject()) != null){
                 dataBase.add(newCliente);
+                System.out.println("do banco" + newCliente.toString());
             }
+
+            in.close();
+            arq.close();
 
         } catch (FileNotFoundException e) {
             System.out.println("Banco de dados nao encontrado");;
@@ -76,6 +79,9 @@ public class IN_OUT {
             while((novaConta = (ClienteConta) in.readObject()) != null){
                 dataBase.add(novaConta);
             }
+
+            in.close();
+            arq.close();
 
         } catch (FileNotFoundException e) {
             System.out.println("Banco de dados nao encontrado");;

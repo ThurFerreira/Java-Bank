@@ -11,22 +11,20 @@ import DataObjects.Agencia;
 import java.io.IOException;
 import java.time.LocalDate;
 import java.time.ZoneId;
-import java.util.Date;
-import java.util.HashSet;
-import java.util.Scanner;
-import java.util.Set;
+import java.util.*;
+
 import IN_OUT.*;
 
 public class Main {
     public static void main(String[] args) {
-        Set<ClienteConta> clienteConta = new HashSet<>();
-        Set<Cliente> clientes = new HashSet<>();
-        Set<Agencia> agencias = new HashSet<>();
-
-        System.out.println(clientes.toString());
+        List<ClienteConta> clienteConta = new ArrayList<>();
+        List<Cliente> clientes = new ArrayList<>();
+        List<Agencia> agencias = new ArrayList<>();
 
         IN_OUT.loadClienteContaDatabase(clienteConta);
         IN_OUT.loadClienteDatabase(clientes);
+
+        System.out.println(clientes.size());
 
         Scanner sc = new Scanner(System.in);
         int escolha = 0;
@@ -59,7 +57,7 @@ public class Main {
 
                         //adiciona o novo cliente no hashset
                         clientes.add(cliente);
-                        System.out.println(cliente);
+                        System.out.println("2" + cliente.toString());
                         IN_OUT.addClienteToDataBase(cliente);//salva no banco de dados
 
                     } catch (ClienteJaExistenteException e) {
@@ -297,6 +295,4 @@ public class Main {
         System.out.println("Cliente cadastrado com sucesso");
         return newCliente;
     }
-
-
 }

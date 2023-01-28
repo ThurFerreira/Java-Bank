@@ -3,10 +3,11 @@ package Entidades;
 import DataObjects.CurrentDate;
 import DataObjects.Endereco;
 
+import java.io.Serializable;
 import java.text.SimpleDateFormat;
 import java.util.Date;
 
-public abstract class Pessoa{
+public abstract class Pessoa implements Serializable {
     private String cpf;
     private String nome;
     private Date dataNascimento;
