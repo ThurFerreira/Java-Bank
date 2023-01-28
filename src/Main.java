@@ -9,9 +9,6 @@ import Exceptions.ClienteJaExistenteException;
 import Exceptions.SenhaIncorretaException;
 import Relacional.ClienteConta;
 import DataObjects.Agencia;
-
-import java.io.IOException;
-import java.time.Instant;
 import java.time.LocalDate;
 import java.time.ZoneId;
 import java.util.*;
@@ -20,14 +17,15 @@ import IN_OUT.*;
 
 public class Main {
     public static void main(String[] args) {
-        List<ClienteConta> clienteConta = new ArrayList<>();
-        List<Cliente> clientes = new ArrayList<>();
+        ArrayList<ClienteConta> clienteConta = null;
+        ArrayList<Cliente> clientes = null;
         Agencia []agencias = new Agencia[2];
 
         //carregando bancos de dados
-        IN_OUT.loadClienteContaDatabase(clienteConta);
-        IN_OUT.loadClienteDatabase(clientes);
+        clienteConta = IN_OUT.loadArrayListClienteConta();
+        clientes = IN_OUT.loadArrayListClientes();
         createAgencias(agencias);
+        //System.out.println("cc" + clienteConta);
 
         Scanner sc = new Scanner(System.in);
         int escolha = 0;
@@ -40,11 +38,12 @@ public class Main {
                     "1 - Adicionar novo cliente\n" +
                             "2 - Adicionar nova conta\n" +
                             "3 - Realizar operação em conta existente\n" +
-                            "4 - Sair\n");
+                            "4 - Sair\n" +
+                            "5 - Mostrar lista\n");
 
             escolha = sc.nextByte();
 
-            while (escolha < 1 || escolha > 4) {
+            while (escolha < 1 || escolha > 5) {
                 System.out.println("Escolha inválida. Digite sua escolha novamente:");
                 escolha = sc.nextInt();
             }
@@ -58,9 +57,8 @@ public class Main {
                     try {
                         cliente = cadastraCliente(sc, verify, clientes);
 
-                        //adiciona o novo cliente no hashset
+                        //adiciona o novo cliente a lista
                         clientes.add(cliente);
-                        IN_OUT.addClienteToDataBase(cliente);//salva no banco de dados
 
                     } catch (ClienteJaExistenteException e) {
                         System.out.println(e.getMessage());
@@ -70,51 +68,54 @@ public class Main {
 
                 case 2://cadastra nova conta
 
-                        System.out.println("O cliente ja é cadastrado? \n [1] SIM [2] NAO");
-                        escolha = sc.nextInt();
+                    System.out.println("O cliente ja é cadastrado? \n [1] SIM [2] NAO");
+                    escolha = sc.nextInt();
+                    sc.nextLine();
 
-                    while (!verify){
-                        if (escolha == 1) {//cliente ja existe, buscando
-                            System.out.println("Digite o CPF do cliente: ");
-                            String cpf = sc.next();
+                    if (escolha == 1) {
+                        while (!verify){
+                            //cliente ja existe, buscando
+                                System.out.println("Digite o CPF do cliente: ");
+                                String cpf = sc.nextLine();
 
-                            //buscando o cliente na base de dados
-                            for (Cliente c : clientes) {
-                                if (cpf.equals(c.getCpf())) {//achou
-                                    cliente = c;
-                                    verify = true;
-                                    break;
+                                //buscando o cliente na base de dados
+                                for (Cliente c : clientes) {
+                                    if (cpf.equals(c.getCpf())) {//achou
+                                        cliente = c;
+                                        verify = true;
+                                        break;
+                                    }
+                                }
+
+                                if (cliente == null) {
+                                    System.out.println("Cliente não encontrado ou cpf inválido. Tente novamente.");
                                 }
                             }
-
-                            if (cliente == null) {
-                                System.out.println("Cliente não encontrado ou cpf inválido. Tente novamente.");
-                            }
-                        }
                     }
 
                     if(escolha == 2){//cadastrando cliente caso ele nao exista no banco de dados
+
                         try {
                             cliente = cadastraCliente(sc, verify, clientes);
+                            //adiciona a lista
+                            clientes.add(cliente);
 
                         } catch (ClienteJaExistenteException e) {
                             System.out.printf(e.getMessage());
                         }
-
-                        //adiciona no hash o cliente novo
-                        clientes.add(cliente);
                     }
 
                     //cadastro da conta
-                    System.out.println("Qual o tipo da conta: \n [1] Conta corrente \n [2] Conta Salario \n [3] Conta Poupança");
+                    System.out.println("Qual o tipo da conta: \n [1] Conta corrente \n [2] Conta Poupança \n [3] Conta Salário");
                     escolha = sc.nextByte();
 
                     switch (escolha){//escolha do tipo da conta (Corrente, Poupança ou Salario)
                         case 1://conta corrente
+
                             agencia = null;
                             verify = false;
-                            System.out.println("Selecione a agencia mais proxima da sua casa: ");
 
+                            System.out.println("Selecione a agencia mais proxima da sua casa: ");
                             while (!verify) {
                                 int i = 0;
 
@@ -150,55 +151,57 @@ public class Main {
                             System.out.println("Informe o valor da Taxa de Administraçao: ");
                             int taxaAdm = sc.nextInt();
 
+                            //gerando a conta corrente
                             ContaCorrente newContaC = new ContaCorrente(clienteConta.size()+1, senha, agencia, limiteCheque, taxaAdm);
-
+                            newContaC.setAgencia(agencia);
                             ClienteConta cc = new ClienteConta(cliente, newContaC);
+                            //salvando no banco de dados
                             clienteConta.add(cc);
-                            IN_OUT.addClienteContaToDataBase(cc);
+
 
                             System.out.println("Conta cadastrada com sucesso!");
                             break;
 
                         case 2: //Conta poupança
 
-                            System.out.println("Digite a senha da conta: ");
+                            verify = false;
+
                             System.out.println("Selecione a agencia mais proxima da sua casa: ");
-
-
-                            while (!verify){
+                            while (!verify) {
                                 int i = 0;
 
-                                for (Agencia a : agencias){//listando agencias para escolha
-
-                                    System.out.println((i+1) + " - " + a.getNome());
+                                for (Agencia a : agencias) {//listando agencias para escolha
+                                    System.out.println((i + 1) + " - " + a.getNome());
                                     i++;
                                 }
 
                                 escolha = sc.nextByte();
 
-                                i = 0;
-                                for (Agencia a: agencias) {//retornando a agencia escolhida e parando o laço
-                                    if(i == escolha-1){
+                                i = 1;
+                                for (Agencia a : agencias) {//retornando a agencia escolhida e parando o laço
+                                    if (i == escolha) {
                                         agencia = a;
                                         verify = true;
                                         break;
                                     }
+
+                                    i++;
                                 }
 
-                                if(agencia == null){
-                                    System.out.printf("Agencia nao encontrada! Verifique e tente novamente.");
+                                if (agencia == null) {
+                                    System.out.printf("Agencia nao encontrada! Verifique e tente novamente. \n");
                                 }
                             }
 
                             System.out.println("Digite a senha de 4 numeros da conta");
-                            senha = sc.nextByte();
+                            senha = sc.nextInt();
 
-                             ContaPoupanca newContaP = new ContaPoupanca(clienteConta.size()+1, senha, agencia);
-
+                            //gerando a conta poupança
+                            ContaPoupanca newContaP = new ContaPoupanca(clienteConta.size()+1, senha, agencia);
+                            newContaP.setAgencia(agencia);
                             ClienteConta cp = new ClienteConta(cliente, newContaP);
+                            //adicionando ao banco de dados
                             clienteConta.add(cp);
-
-                            IN_OUT.addClienteContaToDataBase(cp);
 
                             System.out.println("Conta cadastrada com sucesso!");
 
@@ -206,48 +209,51 @@ public class Main {
 
                         case 3: //conta salario
 
-                            System.out.println("Digite a senha da conta: ");
+                            verify = false;
+
                             System.out.println("Selecione a agencia mais proxima da sua casa: ");
 
-
-                            while (!verify){
+                            while (!verify) {
                                 int i = 0;
 
-                                for (Agencia a : agencias){//listando agencias para escolha
-
-                                    System.out.println((i+1) + " - " + a.getNome());
+                                for (Agencia a : agencias) {//listando agencias para escolha
+                                    System.out.println((i + 1) + " - " + a.getNome());
                                     i++;
                                 }
 
                                 escolha = sc.nextByte();
 
-                                i = 0;
-                                for (Agencia a: agencias) {//retornando a agencia escolhida e parando o laço
-                                    if(i == escolha-1){
+                                i = 1;
+                                for (Agencia a : agencias) {//retornando a agencia escolhida e parando o laço
+                                    if (i == escolha) {
                                         agencia = a;
                                         verify = true;
                                         break;
                                     }
+
+                                    i++;
                                 }
 
-                                if(agencia == null){
-                                    System.out.printf("Agencia nao encontrada! Verifique e tente novamente.");
+                                if (agencia == null) {
+                                    System.out.printf("Agencia nao encontrada! Verifique e tente novamente. \n");
                                 }
                             }
 
                             System.out.println("Digite a senha de 4 numeros da conta: ");
-                            senha = sc.nextByte();
+                            senha = sc.nextInt();
 
                             System.out.println("Informe o limite para de transferencia: ");
-                            int limiteTransferencia = sc.nextByte();
+                            int limiteTransferencia = sc.nextInt();
 
                             System.out.println("Informe o limite para saques: ");
-                            int limiteSaque = sc.nextByte();
+                            int limiteSaque = sc.nextInt();
 
+                            //gerando a conta salario
                             ContaSalario newContaS = new ContaSalario(clienteConta.size()+1, senha, agencia, limiteTransferencia, limiteSaque);
+                            newContaS.setAgencia(agencia);
                             ClienteConta cs = new ClienteConta(cliente, newContaS);
+                            //salvando no banco de dados
                             clienteConta.add(cs);
-                            IN_OUT.addClienteContaToDataBase(cs);
 
                             System.out.println("Conta cadastrada com sucesso!");
 
@@ -257,16 +263,46 @@ public class Main {
 
                 case 3: //realizar operações
 
-                    System.out.printf("Insira o número da conta e a senha: \n Conta: ");
-                    int numeroConta = sc.nextInt();
+                    verify = false;
+
+                    System.out.printf("Insira o número da conta e a senha");
+                    while(!verify) {
+                        System.out.printf("Número da conta: ");
+                        int numeroConta = sc.nextInt();
+
+
+                    }
                     System.out.println("Senha: ");
                     int senha = sc.nextInt();
 
                     System.out.println("Selecione a operação que deseja realizar: ");
 
                     break;
+                case 4:
+                    IN_OUT.saveArrayListClienteConta(clienteConta);
+                    IN_OUT.saveArrayListClientes(clientes);
+                    break;
 
+                case 5:
+                    System.out.println("ClienteConta:");
+                    for (ClienteConta cc: clienteConta) {
+                        if(cc.getConta() instanceof ContaCorrente) {
+                            System.out.println("Dono : " + cc.getCliente());
+                            System.out.println("Conta Corrente: " + ((ContaCorrente)cc.getConta()) + "\n---");
 
+                        }else if(cc.getConta() instanceof ContaPoupanca){
+                            System.out.println("Dono : " + cc.getCliente());
+                            System.out.println("Conta Poupança: " + ((ContaPoupanca)cc.getConta()));
+                            System.out.println("rendimento mes atual: " + ((ContaPoupanca)cc.getConta()).getRendimentoMesAtual() + "\n---");
+
+                        }else{
+                            System.out.println("Dono : " + cc.getCliente());
+                            System.out.println("Conta Salario: " + ((ContaSalario)cc.getConta()));
+                            System.out.println("limite de saque: " + ((ContaSalario)cc.getConta()).getLimiteSaque() + "\n---");
+                        }
+                    }
+                    System.out.println("\nClientes: \n" + clientes);
+                    break;
             }
         }
     }
@@ -287,21 +323,21 @@ public class Main {
         }
 
         System.out.println("Insira o Nome do cliente: ");
-        String nome = sc.next();
+        String nome = sc.nextLine();
 
         System.out.println("Insira o endereço do cliente no formato Rua/Bairro/Cidade: ");
-        String enderecoString = sc.next();
+        String enderecoString = sc.nextLine();
         String[] endereco = new String[3];
         endereco = enderecoString.split("/");
 
         System.out.println("Insira o Estado Civil do cliente: ");
-        String estadoCivil = sc.next();
+        String estadoCivil = sc.nextLine();
 
         System.out.println("Insira a Escolaridade do cliente: ");
-        String escolaridade = sc.next();
+        String escolaridade = sc.nextLine();
 
         System.out.println("Insira a data de nascimento do cliente no formato dia/mes/ano: ");
-        String stringData = sc.next();
+        String stringData = sc.nextLine();
         String[] data = new String[3];
         data = stringData.split("/");
         LocalDate dataNacimento = LocalDate.of(Integer.parseInt(data[2]), Integer.parseInt(data[1]), Integer.parseInt(data[0]));

@@ -7,7 +7,9 @@ import Exceptions.SemSaldoException;
 import Exceptions.SenhaIncorretaException;
 import Exceptions.ValorInvalidoException;
 
-public class ContaSalario extends Conta{
+import java.io.Serializable;
+
+public class ContaSalario extends Conta implements Serializable {
 
     private int limiteTransferencia;
     private int limiteSaque;
@@ -41,7 +43,7 @@ public class ContaSalario extends Conta{
         verificaSaldo(valor);
 
         //verificando valor a ser sacado
-        if(valor > 0 && valor <= this.limiteSaque){
+        if(valor > 0 && valor <= limiteSaque){
             super.saldoAtual -= valor;
             TransacaoBancaria novaTransacao = new TransacaoBancaria(valor, 1, canal);
             historico.add(novaTransacao);

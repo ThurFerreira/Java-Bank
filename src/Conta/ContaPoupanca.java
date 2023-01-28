@@ -4,7 +4,7 @@ import DataObjects.Agencia;
 
 import java.io.Serializable;
 
-public class ContaPoupanca extends Conta{
+public class ContaPoupanca extends Conta implements Serializable{
 
     private int rendimentoMesAtual;
 
@@ -14,6 +14,7 @@ public class ContaPoupanca extends Conta{
     }
 
     public int getRendimentoMesAtual() {
+
         return rendimentoMesAtual;
     }
 

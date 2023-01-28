@@ -148,6 +148,10 @@ public abstract class Conta implements TransacoesBancarias, Serializable {
         }
     }
 
+    public void setAgencia(Agencia agencia) {
+        this.agencia = agencia;
+    }
+
     @Override
     public String toString() {
         return "Conta{" +

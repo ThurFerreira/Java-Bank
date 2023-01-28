@@ -4,7 +4,7 @@ import DataObjects.Agencia;
 
 import java.io.Serializable;
 
-public class ContaCorrente extends Conta{
+public class ContaCorrente extends Conta implements Serializable{
 
     private int limiteDoChequeEspecial;
     private int valorTaxaAdm;
