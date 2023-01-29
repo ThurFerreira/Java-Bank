@@ -50,4 +50,10 @@ public class TransacaoBancaria implements Serializable{
     public void setCanalPorOndeFoiFeita(String meio) {
         this.canalPorOndeFoiFeita = canalPorOndeFoiFeita;
     }
+
+    @Override
+    public String toString() {
+        return "TransacaoBancaria [valorTransacao=" + valorTransacao + ", tipoDaTransacao=" + tipoDaTransacao
+                + ", dataDaTransacao=" + dataDaTransacao + ", canalPorOndeFoiFeita=" + canalPorOndeFoiFeita + "]";
+    }
 }

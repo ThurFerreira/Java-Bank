@@ -108,6 +108,7 @@ public class Main {
 
                         } catch (ClienteJaExistenteException e) {
                             System.out.printf(e.getMessage());
+                            break;
                         }
                     }
 
@@ -438,7 +439,7 @@ public class Main {
                                 meio = escolheMeio();
 
                                 try {
-                                    conta.efeturarPagamento(senha, valor, meio, dataPagamento);
+                                    conta.efetuarPagamento(senha, valor, meio, dataPagamento);
                                     verifyError = 0;
 
                                 } catch (SenhaIncorretaException e) {
@@ -450,7 +451,6 @@ public class Main {
                                     break;
 
                                 } catch (SemSaldoException e) {
-                                    System.out.println(e.getMessage());
                                     if(conta.getSaldoAtual() == 0) break;
                                     else {
                                         verifyError = 2;
@@ -484,7 +484,11 @@ public class Main {
                     for (ClienteConta cc : clienteConta) {
                         if (cc.getConta() instanceof ContaCorrente) {
                             System.out.println("Dono : " + cc.getCliente());
-                            System.out.println("Conta Corrente: " + ((ContaCorrente) cc.getConta()) + "\n---");
+                            System.out.println("Conta Corrente: " + ((ContaCorrente) cc.getConta()));
+                            System.out.println("Histórico da Conta: ");
+                            for (TransacaoBancaria t : cc.getConta().getHistorico()) {
+                                System.out.println("    " + t.toString());
+                            }
 
                         } else if (cc.getConta() instanceof ContaPoupanca) {
                             System.out.println("Dono : " + cc.getCliente());

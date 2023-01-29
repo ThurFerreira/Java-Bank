@@ -65,6 +65,10 @@ public abstract class Conta implements TransacoesBancarias, Serializable {
         return agencia;
     }
 
+    public List<TransacaoBancaria> getHistorico(){
+        return historico;
+    }
+
     @Override
     public void sacar(int senha, double valor, String meio) throws SenhaIncorretaException, SemSaldoException, ContaDesativadaException, ValorInvalidoException {
         isActive();
@@ -90,7 +94,7 @@ public abstract class Conta implements TransacoesBancarias, Serializable {
         //verificando valor a ser depositado
         if(valor > 0.0){
             this.saldoAtual += valor;
-            TransacaoBancaria novaTransacao = new TransacaoBancaria(valor, 1, meio);
+            TransacaoBancaria novaTransacao = new TransacaoBancaria(valor, 2, meio);
             historico.add(novaTransacao);
 
         }else{
@@ -104,21 +108,21 @@ public abstract class Conta implements TransacoesBancarias, Serializable {
         confirmaSenha(senha);
 
         System.out.printf("R$ %.2f\n", this.saldoAtual);
-        TransacaoBancaria novaTransacao = new TransacaoBancaria(0, 1, meio);
+        TransacaoBancaria novaTransacao = new TransacaoBancaria(0, 3, meio);
         historico.add(novaTransacao);
 
         return 0;
     }
 
     @Override
-    public void efeturarPagamento(int senha, double valor, String meio, Date dataPagamento) throws SenhaIncorretaException, SemSaldoException, ContaDesativadaException, ValorInvalidoException {
+    public void efetuarPagamento(int senha, double valor, String meio, Date dataPagamento) throws SenhaIncorretaException, SemSaldoException, ContaDesativadaException, ValorInvalidoException {
         isActive();
         confirmaSenha(senha);
         verificaSaldo(valor);
 
         if(valor > 0d){
-            this.saldoAtual += valor;
-            TransacaoBancaria novaTransacao = new TransacaoBancaria(valor, 1, meio, dataPagamento);
+            this.saldoAtual -= valor;
+            TransacaoBancaria novaTransacao = new TransacaoBancaria(valor, 4, meio, dataPagamento);
             historico.add(novaTransacao);
 
         }else{

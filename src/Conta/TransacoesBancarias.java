@@ -13,5 +13,5 @@ public interface TransacoesBancarias {
 
     public int consultarSaldo(int senha, String canal) throws SenhaIncorretaException, ContaDesativadaException;
 
-    void efeturarPagamento(int senha, double valor, String canal, Date dataPagamento) throws SenhaIncorretaException, SemSaldoException, ContaDesativadaException, ValorInvalidoException;
+    void efetuarPagamento(int senha, double valor, String canal, Date dataPagamento) throws SenhaIncorretaException, SemSaldoException, ContaDesativadaException, ValorInvalidoException;
 }
