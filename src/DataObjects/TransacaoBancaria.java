@@ -2,10 +2,12 @@ package DataObjects;
 
 import Conta.Conta;
 import Exceptions.SenhaIncorretaException;
+
+import java.io.Serializable;
 import java.text.SimpleDateFormat;
 import java.util.Date;
 
-public class TransacaoBancaria{
+public class TransacaoBancaria implements Serializable{
     private double valorTransacao;
     private int tipoDaTransacao;//1 saque; 2 deposito; 3 consultar saldo; 4 efetuar pagamento
     private Date dataDaTransacao;

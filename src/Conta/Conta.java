@@ -116,7 +116,7 @@ public abstract class Conta implements TransacoesBancarias, Serializable {
         confirmaSenha(senha);
         verificaSaldo(valor);
 
-        if(valor > 0.0){
+        if(valor > 0d){
             this.saldoAtual += valor;
             TransacaoBancaria novaTransacao = new TransacaoBancaria(valor, 1, meio, dataPagamento);
             historico.add(novaTransacao);
@@ -128,8 +128,6 @@ public abstract class Conta implements TransacoesBancarias, Serializable {
     }
 
     protected void confirmaSenha(int senha) throws SenhaIncorretaException {
-        confirmaSenha(senha);
-
         if (senha != this.senha)
             throw new SenhaIncorretaException();
     }
