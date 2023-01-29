@@ -315,19 +315,19 @@ public class Main {
                                     conta.sacar(senha, valorSaque, localDoSaque);
 
                                 } catch (SenhaIncorretaException e) {
-                                    System.out.println("Senha Incorreta! Verifique e tente novamente.");
+                                    System.out.println(e.getMessage());
                                     verifyError = true;
 
                                 } catch (SemSaldoException e) {
-                                    System.out.println("Salvo Insuficiente! Verifique e tente novamente.");
+                                    System.out.println(e.getMessage());
                                     verifyError = true;
 
                                 } catch (ContaDesativadaException e) {
-                                    System.out.println("Conta Inativa! Verifique e tente novamente.");
+                                    System.out.println(e.getMessage());
                                     verifyError = true;
 
                                 } catch (ValorInvalidoException e) {
-                                    System.out.println("Valor Inválido! Verifique e tente novamente.");
+                                    System.out.println(e.getMessage());
                                     verifyError = true;
 
                                 }
@@ -340,7 +340,7 @@ public class Main {
                             break;
 
                         case 2://deposito
-                            
+
                             break;
 
                         case 3:
