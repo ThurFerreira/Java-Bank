@@ -337,7 +337,7 @@ public class Main {
 
                                 } catch (ValorInvalidoException e) {
                                     System.out.println(e.getMessage());
-                                    verifyError = 2;
+                                    break;
 
                                 }
 
@@ -390,24 +390,34 @@ public class Main {
 
                             String meio = escolheMeio();
 
+                            while (!verify) {
+                                if(verifyError == 1){
+                                    System.out.println("Digite a senha novamente:");
+                                    senha = sc.nextInt();
+                                }
 
                             try {
                                 conta.consultarSaldo(senha, meio);
+                                verifyError = 0;
 
                             } catch (SenhaIncorretaException e) {
                                 System.out.println(e.getMessage());
-                                break;
+                                verifyError = 1;
 
                             } catch (ContaDesativadaException e) {
                                 System.out.println(e.getMessage());
                                 break;
                             }
 
-                            System.out.printf("Saldo Atual: R$ %.2f\n", conta.getSaldoAtual());
+                            if(verifyError == 0){
+                                System.out.printf("Saldo Atual: R$ %.2f\n", conta.getSaldoAtual());
+                                System.out.println("Pressione enter para continuar...");
+                                verify = true;
+                                break;
+                            }
+                        }
+                        break;
 
-                            System.out.println("Pressione enter para continuar...");
-
-                            break;
 
                         case 4:// efetuar pagamento
                             while (!verify) {
@@ -465,9 +475,10 @@ public class Main {
                 case 4:
                     IN_OUT.saveArrayListClienteConta(clienteConta);
                     IN_OUT.saveArrayListClientes(clientes);
+
+                    System.out.println("Pressione enter para continuar...");
                     break;
                 
-                    /*
                 case 5:
                     System.out.println("ClienteConta:");
                     for (ClienteConta cc : clienteConta) {
@@ -490,7 +501,6 @@ public class Main {
                     }
                     System.out.println("\nClientes: \n" + clientes);
                     break;
-                    */
             }
 
             continuar = sc.nextLine();
@@ -577,9 +587,15 @@ public class Main {
     public static String escolheMeio() {
         Scanner sc = new Scanner(System.in);
 
-        System.out.println(
-                "Insira por onde o dinheiro será depositado:\n [1] Caixa Físico\n [2] Caixa Eletrônico\n [3] Internet Banking");
+        System.out.println("Insira o meio da transação:\n [1] Caixa Físico\n [2] Caixa Eletrônico\n [3] Internet Banking");
+
         int option = sc.nextInt();
+        
+            while(option < 1 || option > 3){
+                System.out.println("Escolha inválida. Escolha novamente o meio da transação:\n [1] Caixa Físico\n [2] Caixa Eletrônico\n [3] Internet Banking");
+                option = sc.nextInt();
+            }
+
         String meio = null;
 
         if (option == 1) {
