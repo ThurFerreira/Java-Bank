@@ -37,13 +37,13 @@ public class ContaSalario extends Conta implements Serializable {
     }
 
     @Override
-    public void sacar(int senha, int valor, String canal) throws SenhaIncorretaException, SemSaldoException, ContaDesativadaException, ValorInvalidoException {
+    public void sacar(int senha, double valor, String canal) throws SenhaIncorretaException, SemSaldoException, ContaDesativadaException, ValorInvalidoException {
         isActive();
         confirmaSenha(senha);
         verificaSaldo(valor);
 
         //verificando valor a ser sacado
-        if(valor > 0 && valor <= limiteSaque){
+        if(valor > 0.0 && valor <= limiteSaque){
             super.saldoAtual -= valor;
             TransacaoBancaria novaTransacao = new TransacaoBancaria(valor, 1, canal);
             historico.add(novaTransacao);

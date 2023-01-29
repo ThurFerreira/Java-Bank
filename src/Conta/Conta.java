@@ -18,7 +18,7 @@ public abstract class Conta implements TransacoesBancarias, Serializable {
     protected int senha;
     protected int isActive; //1 for active, 0 for deactivate
     protected int numeroConta;
-    protected Double saldoAtual;
+    protected double saldoAtual;
     protected Date dataAberturaConta;
     protected String ultimaMovimentacao;
     protected Agencia agencia;
@@ -66,15 +66,15 @@ public abstract class Conta implements TransacoesBancarias, Serializable {
     }
 
     @Override
-    public void sacar(int senha, int valor, String canal) throws SenhaIncorretaException, SemSaldoException, ContaDesativadaException, ValorInvalidoException {
+    public void sacar(int senha, double valor, String meio) throws SenhaIncorretaException, SemSaldoException, ContaDesativadaException, ValorInvalidoException {
         isActive();
         confirmaSenha(senha);
         verificaSaldo(valor);
 
         //verificando valor a ser sacado
-        if(valor > 0){
+        if(valor > 0.0){
             this.saldoAtual -= valor;
-            TransacaoBancaria novaTransacao = new TransacaoBancaria(valor, 1, canal);
+            TransacaoBancaria novaTransacao = new TransacaoBancaria(valor, 1, meio);
             historico.add(novaTransacao);
         }else{
             throw new ValorInvalidoException();
@@ -83,14 +83,14 @@ public abstract class Conta implements TransacoesBancarias, Serializable {
     }
 
     @Override
-    public void depositar(int senha, int valor, String canal) throws SenhaIncorretaException, ContaDesativadaException, ValorInvalidoException{
+    public void depositar(int senha, double valor, String meio) throws SenhaIncorretaException, ContaDesativadaException, ValorInvalidoException{
         isActive();
         confirmaSenha(senha);
 
         //verificando valor a ser depositado
-        if(valor > 0){
+        if(valor > 0.0){
             this.saldoAtual += valor;
-            TransacaoBancaria novaTransacao = new TransacaoBancaria(valor, 1, canal);
+            TransacaoBancaria novaTransacao = new TransacaoBancaria(valor, 1, meio);
             historico.add(novaTransacao);
 
         }else{
@@ -99,26 +99,26 @@ public abstract class Conta implements TransacoesBancarias, Serializable {
     }
 
     @Override
-    public int consultarSaldo(int senha, String canal) throws SenhaIncorretaException, ContaDesativadaException {
+    public int consultarSaldo(int senha, String meio) throws SenhaIncorretaException, ContaDesativadaException {
         isActive();
         confirmaSenha(senha);
 
         System.out.printf("R$ %.2f\n", this.saldoAtual);
-        TransacaoBancaria novaTransacao = new TransacaoBancaria(0, 1, canal);
+        TransacaoBancaria novaTransacao = new TransacaoBancaria(0, 1, meio);
         historico.add(novaTransacao);
 
         return 0;
     }
 
     @Override
-    public void efeturarPagamento(int senha, int valor, String canal) throws SenhaIncorretaException, SemSaldoException, ContaDesativadaException, ValorInvalidoException {
+    public void efeturarPagamento(int senha, double valor, String meio, Date dataPagamento) throws SenhaIncorretaException, SemSaldoException, ContaDesativadaException, ValorInvalidoException {
         isActive();
         confirmaSenha(senha);
         verificaSaldo(valor);
 
-        if(valor > 0){
+        if(valor > 0.0){
             this.saldoAtual += valor;
-            TransacaoBancaria novaTransacao = new TransacaoBancaria(valor, 1, canal);
+            TransacaoBancaria novaTransacao = new TransacaoBancaria(valor, 1, meio, dataPagamento);
             historico.add(novaTransacao);
 
         }else{
@@ -141,7 +141,7 @@ public abstract class Conta implements TransacoesBancarias, Serializable {
         }
     }
 
-    protected void verificaSaldo(int valor) throws SemSaldoException{
+    protected void verificaSaldo(double valor) throws SemSaldoException{
 
         if(this.saldoAtual < valor){
             throw new SemSaldoException();

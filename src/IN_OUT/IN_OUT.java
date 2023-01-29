@@ -185,10 +185,10 @@ public class IN_OUT {
 
         } catch (FileNotFoundException e) {
             System.out.println("Banco de dados nao encontrado");
-            ;
 
         } catch (IOException e) {
             System.out.println("IO EXC load arraylist clienteConta");
+
         } catch (ClassNotFoundException e) {
             System.out.println(e.getMessage());
         }

@@ -6,23 +6,30 @@ import java.text.SimpleDateFormat;
 import java.util.Date;
 
 public class TransacaoBancaria{
-    private int valorTransacao;
+    private double valorTransacao;
     private int tipoDaTransacao;//1 saque; 2 deposito; 3 consultar saldo; 4 efetuar pagamento
     private Date dataDaTransacao;
     private String canalPorOndeFoiFeita;
 
-    public TransacaoBancaria(int valorTransacao, int tipoDaTransacao, String canalPorOndeFoiFeita) {
+    public TransacaoBancaria(double valorTransacao, int tipoDaTransacao, String meio) {
         this.valorTransacao = valorTransacao;
         this.tipoDaTransacao = tipoDaTransacao;
         this.dataDaTransacao = CurrentDate.getCurrentDate();
-        this.canalPorOndeFoiFeita = canalPorOndeFoiFeita;
+        this.canalPorOndeFoiFeita = meio;
     }
 
-    public int getValorTransacoesBancariasTransacao() {
+    public TransacaoBancaria(double valorTransacao, int tipoDaTransacao, String meio, Date dataPagamento) {
+        this.valorTransacao = valorTransacao;
+        this.tipoDaTransacao = tipoDaTransacao;
+        this.dataDaTransacao = dataPagamento;
+        this.canalPorOndeFoiFeita = meio;
+    }
+
+    public double getValorTransacoesBancariasTransacao() {
         return valorTransacao;
     }
 
-    public void setValorTransacao(int valorTransacao) {
+    public void setValorTransacao(double valorTransacao) {
         this.valorTransacao = valorTransacao;
     }
 
@@ -38,7 +45,7 @@ public class TransacaoBancaria{
         return canalPorOndeFoiFeita;
     }
 
-    public void setCanalPorOndeFoiFeita(String canalPorOndeFoiFeita) {
+    public void setCanalPorOndeFoiFeita(String meio) {
         this.canalPorOndeFoiFeita = canalPorOndeFoiFeita;
     }
 }

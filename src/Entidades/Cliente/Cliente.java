@@ -36,6 +36,6 @@ public class Cliente extends Pessoa implements Serializable {
         return super.toString() +
                 "estadoCivil='" + estadoCivil + '\'' +
                 ", escolaridade='" + escolaridade + '\'' +
-                '}';
+                "}\n";
     }
 }

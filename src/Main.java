@@ -1,6 +1,7 @@
 import Conta.*;
 import DataObjects.CurrentDate;
 import DataObjects.Endereco;
+import DataObjects.TransacaoBancaria;
 import Entidades.Cliente.Cliente;
 import Entidades.Funcionario.Funcionario;
 import Entidades.Funcionario.Gerente;
@@ -24,7 +25,6 @@ public class Main {
         clienteConta = IN_OUT.loadArrayListClienteConta();
         clientes = IN_OUT.loadArrayListClientes();
         createAgencias(agencias);
-        //System.out.println("cc" + clienteConta);
 
         Scanner sc = new Scanner(System.in);
         int escolha = 0;
@@ -297,22 +297,13 @@ public class Main {
                         case 1://saque
                             while (!verify){
                                 System.out.println("Insira o valor do saque: ");
-                                int valorSaque = sc.nextInt();
+                                double valorSaque = sc.nextDouble();
                                 boolean verifyError = false;
 
-                                System.out.println("Insira onde o dinheiro será sacado: \n[1] Caixa Físico\n [2] Caixa Eletrônico");
-                                int option = sc.nextInt();
-                                String localDoSaque = null;
-
-                                if(option == 1){
-                                    localDoSaque = "Caixa Físico";
-
-                                }else if(option == 2){
-                                    localDoSaque = "Caixa Eletrônico";
-                                }
+                                String meio = escolheMeio();
 
                                 try {
-                                    conta.sacar(senha, valorSaque, localDoSaque);
+                                    conta.sacar(senha, valorSaque, meio);
 
                                 } catch (SenhaIncorretaException e) {
                                     System.out.println(e.getMessage());
@@ -340,13 +331,102 @@ public class Main {
                             break;
 
                         case 2://deposito
+                            while (!verify){
+                                System.out.println("Insira o valor do deposito: ");
+                                double valorDeposito = sc.nextDouble();
+                                boolean verifyError = false;
 
+                                String meio = escolheMeio();
+
+                                try {
+                                    conta.depositar(senha, valorDeposito, meio);
+
+                                } catch (SenhaIncorretaException e) {
+                                    System.out.println(e.getMessage());
+                                    verifyError = true;
+
+                                } catch (ContaDesativadaException e) {
+                                    System.out.println(e.getMessage());
+                                    verifyError = true;
+
+                                } catch (ValorInvalidoException e) {
+                                    System.out.println(e.getMessage());
+                                    verifyError = true;
+
+                                }
+
+                                if(verifyError == false){
+                                    verify = true;
+                                    System.out.println("Operação Efetuada com sucesso!");
+                                }
+                            }
                             break;
 
-                        case 3:
+                        case 3://consultar saldo
+                            while (!verify){
+                                boolean verifyError = false;
+
+                                String meio = escolheMeio();
+
+                                try {
+                                    conta.consultarSaldo(senha, meio);
+
+                                } catch (SenhaIncorretaException e) {
+                                    System.out.println(e.getMessage());
+                                    verifyError = true;
+
+                                } catch (ContaDesativadaException e) {
+                                    System.out.println(e.getMessage());
+                                    verifyError = true;
+
+                                }
+
+                                if(verifyError == false){
+                                    verify = true;
+                                    System.out.printf("Saldo Atual: R$ %.2f\n", conta.getSaldoAtual());
+                                }
+                            }
                             break;
 
-                        case 4:
+                        case 4://efetuar pagamento
+                            while (!verify){
+                                boolean verifyError = false;
+                                System.out.println("Insira o valor do pagamento: ");
+                                double valor = sc.nextDouble();
+
+                                System.out.println("Insira a data para efetuar o pagamento no formato dia/mes/ano: ");
+                                Date date = getFormateDate();
+
+                                Date dataPagamento = new Date();
+
+                                String meio = escolheMeio();
+
+                                try {
+                                    conta.efeturarPagamento(senha, valor, meio, dataPagamento);
+
+                                } catch (SenhaIncorretaException e) {
+                                    System.out.println(e.getMessage());
+                                    verifyError = true;
+
+                                } catch (ContaDesativadaException e) {
+                                    System.out.println(e.getMessage());
+                                    verifyError = true;
+
+                                } catch (SemSaldoException e) {
+                                    System.out.println(e.getMessage());
+                                    verifyError = true;
+
+                                } catch (ValorInvalidoException e) {
+                                    System.out.println(e.getMessage());
+                                    verifyError = true;
+
+                                }
+
+                                if(verifyError == false){
+                                    verify = true;
+                                    System.out.println("Operação realizada com sucesso!");
+                                }
+                            }
                             break;
                     }
 
@@ -410,11 +490,7 @@ public class Main {
         String escolaridade = sc.nextLine();
 
         System.out.println("Insira a data de nascimento do cliente no formato dia/mes/ano: ");
-        String stringData = sc.nextLine();
-        String[] data = new String[3];
-        data = stringData.split("/");
-        LocalDate dataNacimento = LocalDate.of(Integer.parseInt(data[2]), Integer.parseInt(data[1]), Integer.parseInt(data[0]));
-        Date date = Date.from(dataNacimento.atStartOfDay(ZoneId.systemDefault()).toInstant());
+        Date date = getFormateDate();
 
         Cliente newCliente = new Cliente(cpf, nome, new Endereco(endereco[0], endereco[1], endereco[2]), estadoCivil, escolaridade, date);
 
@@ -453,5 +529,38 @@ public class Main {
 
             }
         }
+    }
+
+    public static String escolheMeio(){
+        Scanner sc = new Scanner(System.in);
+
+        System.out.println("Insira por onde o dinheiro será depositado:\n [1] Caixa Físico\n [2] Caixa Eletrônico\n [3] Internet Banking");
+        int option = sc.nextInt();
+        String meio = null;
+
+        if(option == 1){
+            meio = "Caixa Físico";
+
+        }else if(option == 2){
+            meio = "Caixa Eletrônico";
+
+        }else if(option == 3){
+            meio = "Internet Banking";
+
+        }
+
+        return meio;
+    }
+
+    public static Date getFormateDate(){
+        Scanner sc = new Scanner(System.in);
+
+        String stringData = sc.nextLine();
+        String[] data = new String[3];
+        data = stringData.split("/");
+        LocalDate dataNacimento = LocalDate.of(Integer.parseInt(data[2]), Integer.parseInt(data[1]), Integer.parseInt(data[0]));
+        Date date = Date.from(dataNacimento.atStartOfDay(ZoneId.systemDefault()).toInstant());
+
+        return date;
     }
 }
