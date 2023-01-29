@@ -5,8 +5,7 @@ import Entidades.Cliente.Cliente;
 import Entidades.Funcionario.Funcionario;
 import Entidades.Funcionario.Gerente;
 import Entidades.Pessoa;
-import Exceptions.ClienteJaExistenteException;
-import Exceptions.SenhaIncorretaException;
+import Exceptions.*;
 import Relacional.ClienteConta;
 import DataObjects.Agencia;
 import java.time.LocalDate;
@@ -262,22 +261,96 @@ public class Main {
                     break;//fim case 2
 
                 case 3: //realizar operações
-
-                    verify = false;
-
                     System.out.printf("Insira o número da conta e a senha");
+
+                    Conta conta = null;
+                    verify = false;
                     while(!verify) {
                         System.out.printf("Número da conta: ");
                         int numeroConta = sc.nextInt();
 
+                        for (ClienteConta c : clienteConta) {
+                            if (numeroConta == c.getConta().getNumeroConta()) {//achou
+                                conta = c.getConta();
+                                verify = true;
+                                break;
+                            }
+                        }
 
+                        if (conta == null) {
+                            System.out.println("A conta informada não existe! Verifique e tente novamente.");
+                        }
                     }
+
                     System.out.println("Senha: ");
                     int senha = sc.nextInt();
 
-                    System.out.println("Selecione a operação que deseja realizar: ");
+                    System.out.println("Selecione a operação que deseja realizar: " +
+                            "[1] Saque" +
+                            "[2] Deposito" +
+                            "[3] Consultar Saldo atual" +
+                            "[4] Efetuar Pagamento"
+                    );
+                    escolha = sc.nextInt();
 
-                    break;
+                    switch (escolha){
+                        case 1://saque
+                            while (!verify){
+                                System.out.println("Insira o valor do saque: ");
+                                int valorSaque = sc.nextInt();
+                                boolean verifyError = false;
+
+                                System.out.println("Insira onde o dinheiro será sacado: \n[1] Caixa Físico\n [2] Caixa Eletrônico");
+                                int option = sc.nextInt();
+                                String localDoSaque = null;
+
+                                if(option == 1){
+                                    localDoSaque = "Caixa Físico";
+
+                                }else if(option == 2){
+                                    localDoSaque = "Caixa Eletrônico";
+                                }
+
+                                try {
+                                    conta.sacar(senha, valorSaque, localDoSaque);
+
+                                } catch (SenhaIncorretaException e) {
+                                    System.out.println("Senha Incorreta! Verifique e tente novamente.");
+                                    verifyError = true;
+
+                                } catch (SemSaldoException e) {
+                                    System.out.println("Salvo Insuficiente! Verifique e tente novamente.");
+                                    verifyError = true;
+
+                                } catch (ContaDesativadaException e) {
+                                    System.out.println("Conta Inativa! Verifique e tente novamente.");
+                                    verifyError = true;
+
+                                } catch (ValorInvalidoException e) {
+                                    System.out.println("Valor Inválido! Verifique e tente novamente.");
+                                    verifyError = true;
+
+                                }
+
+                                if(verifyError == false){
+                                    verify = true;
+                                    System.out.println("Operação Efetuada com sucesso!");
+                                }
+                            }
+                            break;
+
+                        case 2://deposito
+                            
+                            break;
+
+                        case 3:
+                            break;
+
+                        case 4:
+                            break;
+                    }
+
+                    break;//fim do case 3
                 case 4:
                     IN_OUT.saveArrayListClienteConta(clienteConta);
                     IN_OUT.saveArrayListClientes(clientes);
