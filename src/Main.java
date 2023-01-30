@@ -9,6 +9,8 @@ import Entidades.Pessoa;
 import Exceptions.*;
 import Relacional.ClienteConta;
 import DataObjects.Agencia;
+
+import java.lang.reflect.Array;
 import java.time.LocalDate;
 import java.time.ZoneId;
 import java.util.*;
@@ -33,6 +35,8 @@ public class Main {
         int escolha = 0;
         Agencia agencia = null;
         String continuar = "";
+        int numConta, senha;
+        Conta conta = null;
 
         while (escolheMenu != 4) {
             System.out.println("Bem vindo ao Sistema Bancário!");
@@ -41,15 +45,15 @@ public class Main {
                     "1 - Adicionar novo cliente\n" +
                             "2 - Adicionar nova conta\n" +
                             "3 - Realizar operação em conta existente\n" +
-                            "4 - Sair\n"
-                            //"5 - Mostrar database\n"
-                            );
+                            "4 - Salvar e Sair\n" +
+                            "5 - Mostrar Dados da conta\n"
+            );
 
             escolheMenu = sc.nextByte();
 
             clearPrompt();
 
-            while (escolheMenu < 1 || escolheMenu > 5) {
+            while (escolheMenu < 1 || escolheMenu > 6) {
                 System.out.println("Escolha inválida. Digite sua escolha novamente:");
                 escolha = sc.nextInt();
             }
@@ -151,7 +155,7 @@ public class Main {
                             }
 
                             System.out.println("Digite a senha de 4 numeros da conta");
-                            int senha = sc.nextInt();
+                            senha = sc.nextInt();
 
                             System.out.println("Digite o limite do cheque especial: ");
                             int limiteCheque = sc.nextInt();
@@ -272,14 +276,13 @@ public class Main {
                 case 3: // realizar operações
                     System.out.println("Insira o número da conta e a senha.");
 
-                    Conta conta = null;
                     verify = false;
                     while (!verify) {
                         System.out.println("Número da conta: ");
-                        int numeroConta = sc.nextInt();
+                        numConta = sc.nextInt();
 
                         for (ClienteConta c : clienteConta) {
-                            if (numeroConta == c.getConta().getNumeroConta()) {// achou
+                            if (numConta == c.getConta().getNumeroConta()) {// achou
                                 conta = c.getConta();
                                 verify = true;
                                 break;
@@ -292,13 +295,14 @@ public class Main {
                     }
 
                     System.out.println("Senha: ");
-                    int senha = sc.nextInt();
+                    senha = sc.nextInt();
 
                     System.out.println("Selecione a operação que deseja realizar: \n" +
                             "[1] Saque\n" +
                             "[2] Deposito\n" +
                             "[3] Consultar Saldo atual\n" +
-                            "[4] Efetuar Pagamento\n");
+                            "[4] Efetuar Pagamento\n" +
+                            "[5] Extrato\n");
                     escolha = sc.nextInt();
 
                     clearPrompt();
@@ -310,10 +314,10 @@ public class Main {
                         case 1:// saque
 
                             while (!verify) {
-                                if(verifyError == 1){
+                                if (verifyError == 1) {
                                     System.out.println("Digite a senha novamente:");
                                     senha = sc.nextInt();
-                                }else if(verifyError == 2){
+                                } else if (verifyError == 2) {
                                     System.out.println("Insira o valor do saque: ");
                                     valor = sc.nextDouble();
                                 }
@@ -352,10 +356,10 @@ public class Main {
                         case 2:// deposito
 
                             while (!verify) {
-                                if(verifyError == 1){
+                                if (verifyError == 1) {
                                     System.out.println("Digite a senha novamente:");
                                     senha = sc.nextInt();
-                                }else if(verifyError == 2){
+                                } else if (verifyError == 2) {
                                     System.out.println("Insira o valor do depósito: ");
                                     valor = sc.nextDouble();
                                 }
@@ -392,41 +396,41 @@ public class Main {
                             String meio = escolheMeio();
 
                             while (!verify) {
-                                if(verifyError == 1){
+                                if (verifyError == 1) {
                                     System.out.println("Digite a senha novamente:");
                                     senha = sc.nextInt();
                                 }
 
-                            try {
-                                conta.consultarSaldo(senha, meio);
-                                verifyError = 0;
+                                try {
+                                    conta.consultarSaldo(senha, meio);
+                                    verifyError = 0;
 
-                            } catch (SenhaIncorretaException e) {
-                                System.out.println(e.getMessage());
-                                verifyError = 1;
+                                } catch (SenhaIncorretaException e) {
+                                    System.out.println(e.getMessage());
+                                    verifyError = 1;
 
-                            } catch (ContaDesativadaException e) {
-                                System.out.println(e.getMessage());
-                                break;
+                                } catch (ContaDesativadaException e) {
+                                    System.out.println(e.getMessage());
+                                    break;
+                                }
+
+                                if (verifyError == 0) {
+                                    System.out.printf("Saldo Atual: R$ %.2f\n", conta.getSaldoAtual());
+                                    System.out.println("Pressione enter para continuar...");
+                                    verify = true;
+                                    break;
+                                }
                             }
-
-                            if(verifyError == 0){
-                                System.out.printf("Saldo Atual: R$ %.2f\n", conta.getSaldoAtual());
-                                System.out.println("Pressione enter para continuar...");
-                                verify = true;
-                                break;
-                            }
-                        }
-                        break;
+                            break;
 
 
                         case 4:// efetuar pagamento
                             while (!verify) {
 
-                                if(verifyError == 1){
+                                if (verifyError == 1) {
                                     System.out.println("Digite a senha novamente:");
                                     senha = sc.nextInt();
-                                }else if(verifyError == 2){
+                                } else if (verifyError == 2) {
                                     System.out.println("Insira o valor do pagamento: ");
                                     valor = sc.nextDouble();
                                 }
@@ -451,7 +455,7 @@ public class Main {
                                     break;
 
                                 } catch (SemSaldoException e) {
-                                    if(conta.getSaldoAtual() == 0) break;
+                                    if (conta.getSaldoAtual() == 0) break;
                                     else {
                                         verifyError = 2;
                                         System.out.println("Seu saldo atual é insuficiente. Tente novamente.");
@@ -469,8 +473,14 @@ public class Main {
                                 }
                             }
                             break;
+
+                        case 5:
+                            conta  = confirmaSenhaEConta(clienteConta);
+                            conta.mostraDados();
+
+                            break;
                     }
-                    break;// fim do case 3
+                    break;// fim do case 3 (operações)
 
                 case 4:
                     IN_OUT.saveArrayListClienteConta(clienteConta);
@@ -478,17 +488,23 @@ public class Main {
 
                     System.out.println("Pressione enter para continuar...");
                     break;
-                
+
                 case 5:
+                    conta  = confirmaSenhaEConta(clienteConta);
+                    conta.mostraDados();
+
+                    break;
+
+                case 6:
                     System.out.println("ClienteConta:");
                     for (ClienteConta cc : clienteConta) {
                         if (cc.getConta() instanceof ContaCorrente) {
                             System.out.println("Dono : " + cc.getCliente());
                             System.out.println("Conta Corrente: " + ((ContaCorrente) cc.getConta()));
                             System.out.println("Histórico da Conta: ");
-                            for (TransacaoBancaria t : cc.getConta().getHistorico()) {
-                                System.out.println("    " + t.toString());
-                            }
+                            //for (TransacaoBancaria t : cc.getConta().getHistorico()) {
+                              //  System.out.println("    " + t.toString());
+                            //}
 
                         } else if (cc.getConta() instanceof ContaPoupanca) {
                             System.out.println("Dono : " + cc.getCliente());
@@ -505,6 +521,7 @@ public class Main {
                     }
                     System.out.println("\nClientes: \n" + clientes);
                     break;
+
             }
 
             continuar = sc.nextLine();
@@ -532,9 +549,9 @@ public class Main {
         System.out.println("Insira o Nome do cliente: ");
         String nome = sc.nextLine();
 
-        System.out.println("Insira o endereço do cliente no formato Rua/Bairro/Cidade: ");
+        System.out.println("Insira o endereço do cliente no formato Rua/Bairro/Cidade/Estado: ");
         String enderecoString = sc.nextLine();
-        String[] endereco = new String[3];
+        String[] endereco = new String[4];
         endereco = enderecoString.split("/");
 
         System.out.println("Insira o Estado Civil do cliente: ");
@@ -546,7 +563,7 @@ public class Main {
         System.out.println("Insira a data de nascimento do cliente no formato dia/mes/ano: ");
         Date date = getFormateDate();
 
-        Cliente newCliente = new Cliente(cpf, nome, new Endereco(endereco[0], endereco[1], endereco[2]), estadoCivil,
+        Cliente newCliente = new Cliente(cpf, nome, new Endereco(endereco[0], endereco[1], endereco[2], endereco[3]), estadoCivil,
                 escolaridade, date);
 
         System.out.println("Cliente cadastrado com sucesso \nPressione enter para continuar...");
@@ -558,7 +575,7 @@ public class Main {
         Agencia agencia1 = new Agencia(
                 123,
                 "Agencia Santa Monica",
-                new Endereco("Uberlandia", "Minas Gerais", "Santa Monica"),
+                new Endereco("Santa Monica", "Uberlândia", "Minas Gerais"),
                 new Gerente("040.058.140-00", "Josimar", "19.305.188-6", new Date(1999, 12, 04),
                         new Endereco("Uberlandia", "Minas Gerais", "Santa Monica"), "10564786981", 'M', "casado",
                         19.000, CurrentDate.getCurrentDate(), 1));
@@ -566,13 +583,13 @@ public class Main {
         Agencia agencia2 = new Agencia(
                 321,
                 "Agencia Capão Redondo",
-                new Endereco("Sao Paulo", "São Paulo", "Capão Redondo"),
+                new Endereco("Capão Redondo", "São Paulo", "São Paulo"),
                 new Gerente("363.995.940-06", "Francisca", "29.083.447-8", new Date(1980, 2, 26),
                         new Endereco("Sao Paulo", "Sao Paulo", "Capão Redondo"), "50719719736", 'F', "solteira", 19.000,
                         CurrentDate.getCurrentDate(), 1));
 
-        agencias[0] = ((((((((((((((((agencia1))))))))))))))));
-        agencias[1] = ((((((((((((((((agencia2))))))))))))))));
+        agencias[0] = agencia1;
+        agencias[1] = agencia2;
     }
 
     public void loadContasAgencia(List<Conta> contas, Agencia[] agencias) {
@@ -594,11 +611,11 @@ public class Main {
         System.out.println("Insira o meio da transação:\n [1] Caixa Físico\n [2] Caixa Eletrônico\n [3] Internet Banking");
 
         int option = sc.nextInt();
-        
-            while(option < 1 || option > 3){
-                System.out.println("Escolha inválida. Escolha novamente o meio da transação:\n [1] Caixa Físico\n [2] Caixa Eletrônico\n [3] Internet Banking");
-                option = sc.nextInt();
-            }
+
+        while (option < 1 || option > 3) {
+            System.out.println("Escolha inválida. Escolha novamente o meio da transação:\n [1] Caixa Físico\n [2] Caixa Eletrônico\n [3] Internet Banking");
+            option = sc.nextInt();
+        }
 
         String meio = null;
 
@@ -629,8 +646,50 @@ public class Main {
         return date;
     }
 
-    public static void clearPrompt(){
-        System.out.print("\033[H\033[2J");  
+    public static void clearPrompt() {
+        System.out.print("\033[H\033[2J");
         System.out.flush();
+    }
+
+    public static Conta confirmaSenhaEConta(ArrayList<ClienteConta> clienteConta) {
+        boolean senhaOK = false, contaOK = false;
+        int senha, numConta;
+        Conta conta = null;
+
+        Scanner sc = new Scanner(System.in);
+
+        System.out.println("Insira o numero da conta e a senha: ");
+
+        while (!senhaOK || !contaOK) {
+
+            if(!contaOK){
+                System.out.printf("Numero da conta: ");
+                numConta = sc.nextInt();
+
+                for (ClienteConta c : clienteConta) {
+                    if (c.getConta().getNumeroConta() == numConta) {
+                        contaOK = true;
+                        conta = c.getConta();
+                        break;
+                    }
+                }
+            }
+
+            if(!senhaOK){
+                System.out.printf("Senha: ");
+                senha = sc.nextInt();
+
+                try {
+                    conta.confirmaSenha(senha);
+                    senhaOK = true;
+
+                } catch (SenhaIncorretaException e) {
+                    System.out.println("Senha incorreta! Verifique e tente novamente.");
+                    senhaOK = false;
+                }
+            }
+        }
+
+        return conta;
     }
 }

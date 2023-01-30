@@ -53,7 +53,17 @@ public class TransacaoBancaria implements Serializable{
 
     @Override
     public String toString() {
-        return "TransacaoBancaria [valorTransacao=" + valorTransacao + ", tipoDaTransacao=" + tipoDaTransacao
-                + ", dataDaTransacao=" + dataDaTransacao + ", canalPorOndeFoiFeita=" + canalPorOndeFoiFeita + "]";
+        String tipo = null;
+        if(this.tipoDaTransacao == 1){
+            tipo = "Saque";
+
+        }else if(this.tipoDaTransacao == 2){
+            tipo = "Deposito";
+
+        }else if(this.tipoDaTransacao == 4){
+            tipo = "Pagamento";
+
+        }
+        return "[ Valor da Transação: " + valorTransacao + ", Tipo da Transação: " + tipo + ", Data da Transação: " + dataDaTransacao + ", Meio: " + canalPorOndeFoiFeita + " ]";
     }
 }

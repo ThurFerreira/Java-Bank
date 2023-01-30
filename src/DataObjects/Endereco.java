@@ -7,12 +7,21 @@ public class Endereco implements Serializable {
     private String cidade;
     private String estado;
     private String bairro;
+    private  String rua;
 
-    public Endereco(String cidade, String estado, String bairro){
+    public Endereco(String bairro, String cidade, String estado){
         this.cidade = cidade;
         this.estado = estado;
         this.bairro = bairro;
     }
+
+    public Endereco(String rua,String bairro, String cidade, String estado){
+        this.cidade = cidade;
+        this.estado = estado;
+        this.bairro = bairro;
+        this.rua = rua;
+    }
+
 
     public String getCidade() {
         return cidade;
@@ -36,5 +45,10 @@ public class Endereco implements Serializable {
 
     public void setBairro(String bairro) {
         this.bairro = bairro;
+    }
+
+    @Override
+    public String toString() {
+        return  bairro + ", " + cidade + " - " + estado; //bairro, cidade - estado
     }
 }

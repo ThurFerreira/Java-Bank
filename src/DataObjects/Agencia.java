@@ -47,5 +47,14 @@ public class Agencia implements Serializable {
     public void setContaToAgencia(Conta newConta){
         contas.add(newConta);
     }
+
+    @Override
+    public String toString() {
+        return "[Numero da Agencia: " + numeroAgencia +
+                ", Endereço da Agencia: " + endereco +
+                ", Gerente: " + gerente.getNome() +
+                "]"
+                ;
+    }
 }
 

@@ -20,7 +20,7 @@ public abstract class Conta implements TransacoesBancarias, Serializable {
     protected int numeroConta;
     protected double saldoAtual;
     protected Date dataAberturaConta;
-    protected String ultimaMovimentacao;
+    protected TransacaoBancaria ultimaMovimentacao;
     protected Agencia agencia;
     protected List<TransacaoBancaria> historico;
 
@@ -58,15 +58,11 @@ public abstract class Conta implements TransacoesBancarias, Serializable {
     }
 
     public String getUltimaMovimentacao() {
-        return this.ultimaMovimentacao;
+        return ultimaMovimentacao.toString();
     }
 
     public Agencia getAgencia() {
         return agencia;
-    }
-
-    public List<TransacaoBancaria> getHistorico(){
-        return historico;
     }
 
     @Override
@@ -131,7 +127,7 @@ public abstract class Conta implements TransacoesBancarias, Serializable {
 
     }
 
-    protected void confirmaSenha(int senha) throws SenhaIncorretaException {
+    public void confirmaSenha(int senha) throws SenhaIncorretaException {
         if (senha != this.senha)
             throw new SenhaIncorretaException();
     }
@@ -154,17 +150,34 @@ public abstract class Conta implements TransacoesBancarias, Serializable {
         this.agencia = agencia;
     }
 
-    @Override
-    public String toString() {
-        return "Conta{" +
-                "senha=" + senha +
-                ", isActive=" + isActive +
-                ", numeroConta=" + numeroConta +
-                ", saldoAtual=" + saldoAtual +
-                ", dataAberturaConta=" + dataAberturaConta +
-                ", ultimaMovimentacao='" + ultimaMovimentacao + '\'' +
-                ", agencia=" + agencia +
-                ", historico=" + historico +
-                '}';
+    public void mostraDados() {
+        String estadoDaConta;
+
+        if (this.isActive == 1) {
+            estadoDaConta = "Ativa";
+        }else{
+            estadoDaConta = "Inativa";
+        }
+
+        System.out.println(
+                "\n Numero da Conta: " + numeroConta +
+                "\n Estado da Conta: " + estadoDaConta +
+                "\n Saldo Atual: " + saldoAtual +
+                "\n Data de abertura da Conta: " + dataAberturaConta +
+                "\n Ultima Movimentação: '" + ultimaMovimentacao + '\'' +
+                "\n Agencia: " + agencia.toString()
+        );
+    }
+
+    public void mostraHistorico(){
+        int  i = 1;
+        if(historico.size() == 0){
+            System.out.println("Histórico de transação vazio!");
+        }else{
+            for (TransacaoBancaria t: historico) {
+                System.out.println(i + " - " + t.toString());
+                i++;
+            }
+        }
     }
 }
