@@ -1,9 +1,11 @@
 package Conta;
 
-import java.text.SimpleDateFormat;
 import java.util.*;
 
 import DataObjects.Agencia;
+import DataObjects.Cartao.Cartao;
+import DataObjects.Cartao.CartaoCredito;
+import DataObjects.Cartao.CartaoDebito;
 import DataObjects.CurrentDate;
 import DataObjects.TransacaoBancaria;
 import Exceptions.ContaDesativadaException;
@@ -15,7 +17,7 @@ import javax.swing.*;
 import java.io.Serializable;
 
 
-public abstract class Conta implements TransacoesBancarias, Serializable {
+public abstract class Conta implements TransacoesBancarias, Serializable, CurrentDate  {
 
     protected int senha;
     protected int isActive; //1 for active, 0 for deactivate
@@ -25,6 +27,7 @@ public abstract class Conta implements TransacoesBancarias, Serializable {
     protected TransacaoBancaria ultimaMovimentacao;
     protected Agencia agencia;
     protected List<TransacaoBancaria> historico;
+    protected Cartao cartaoDebito;
 
     public Conta(int numeroConta, int senha, Agencia agencia) {
         this.senha = senha;
@@ -33,6 +36,8 @@ public abstract class Conta implements TransacoesBancarias, Serializable {
         this.saldoAtual = 0d;
         this.dataAberturaConta = CurrentDate.getCurrentDate();
         historico = new ArrayList<TransacaoBancaria>();
+        cartaoDebito = new CartaoDebito("Basic",numeroConta, senha);
+
     }
 
     public int getSenha() {
@@ -77,6 +82,7 @@ public abstract class Conta implements TransacoesBancarias, Serializable {
             this.saldoAtual -= valor;
             TransacaoBancaria novaTransacao = new TransacaoBancaria(valor, 1, meio);
             historico.add(novaTransacao);
+            ultimaMovimentacao = novaTransacao;
         }else{
             throw new ValorInvalidoException();
         }
@@ -92,6 +98,7 @@ public abstract class Conta implements TransacoesBancarias, Serializable {
             this.saldoAtual += valor;
             TransacaoBancaria novaTransacao = new TransacaoBancaria(valor, 2, meio);
             historico.add(novaTransacao);
+            ultimaMovimentacao = novaTransacao;
 
         }else{
             throw new ValorInvalidoException();
@@ -102,10 +109,7 @@ public abstract class Conta implements TransacoesBancarias, Serializable {
     public int consultarSaldo(String meio) throws ContaDesativadaException {
         isActive();
 
-        System.out.printf("R$ %.2f\n", this.saldoAtual);
-        TransacaoBancaria novaTransacao = new TransacaoBancaria(0, 3, meio);
-        historico.add(novaTransacao);
-
+        System.out.printf("Saldo Atual: R$ %.2f\n", this.saldoAtual);
         return 0;
     }
 
@@ -118,6 +122,7 @@ public abstract class Conta implements TransacoesBancarias, Serializable {
             this.saldoAtual -= valor;
             TransacaoBancaria novaTransacao = new TransacaoBancaria(valor, 4, meio, dataPagamento);
             historico.add(novaTransacao);
+            ultimaMovimentacao = novaTransacao;
 
         }else{
             throw new ValorInvalidoException();
@@ -162,8 +167,11 @@ public abstract class Conta implements TransacoesBancarias, Serializable {
                 "\n Estado da Conta: " + estadoDaConta +
                 "\n Saldo Atual: " + saldoAtual +
                 "\n Data de abertura da Conta: " + CurrentDate.showDate(dataAberturaConta) +
-                "\n Ultima Movimentação: '" + ultimaMovimentacao + '\'' +
-                "\n Agencia: " + agencia.toString()
+                "\n Ultima Movimentação: '" + ultimaMovimentacao.toString() + '\'' +
+                "\n Agencia: " + agencia.toString() +
+                        "\n Cartões: " +
+                        "\n Cartão de Débito: " + cartaoDebito.toString() +
+                        "\n Cartão de Débito: " + cartaoDebito.toString()
        );
     }
 

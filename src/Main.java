@@ -36,7 +36,14 @@ public class Main {
         clienteConta = IN_OUT.loadArrayListClienteConta();
         clientes = IN_OUT.loadArrayListClientes();
         createAgencias(agencias);
-        //createFuncionarios();
+        funcionarios = IN_OUT.loadArrayListFuncionarios();
+    }
+
+    public static void saveDataBases(){
+        IN_OUT.saveArrayListClienteConta(clienteConta);
+        IN_OUT.saveArrayListClientes(clientes);
+        IN_OUT.saveArrayListFuncionarios(funcionarios);
+
     }
 
    // ************************* MENUS ************************* //
@@ -84,33 +91,32 @@ public class Main {
 
                     switch (escolha) {
                         case 1:// saque
-                            efetuaSaque();
+                            efetuaSaque(conta);
                             break;
 
                         case 2:// deposito
-                            efetuaDeposito();
+                            efetuaDeposito(conta);
                             break;
 
                         case 3:// consultar saldo
 
-                            consultarSaldo();
+                            consultarSaldo(conta);
                             break;
 
 
                         case 4:// efetuar pagamento
-                            efetuaPagamento();
+                            efetuaPagamento(conta);
                             break;
 
                         case 5:
-                            conta.mostraDados();
+                            conta.mostraHistorico();
 
                             break;
                     }
                     break;// fim do case 3 (operações)
 
                 case 0://sair e salvar
-                    IN_OUT.saveArrayListClienteConta(clienteConta);
-                    IN_OUT.saveArrayListClientes(clientes);
+                    saveDataBases();
 
                     System.out.println("< Informações salvas com sucesso! >");
                     System.out.println("< Pressione enter para continuar... >");
@@ -118,6 +124,7 @@ public class Main {
 
                 case 4://mostrar dados
                     conta = confirmaSenhaEConta();
+
                     if(conta == null){
                         System.out.println("A conta informada não existe! Verifique e tente novamente.");
                     }else{
@@ -127,7 +134,7 @@ public class Main {
                     System.out.println("< Pressione enter para continuar...>");
                     break;
 
-                case 5:
+                case 6:
                     System.out.println("ClienteConta:");
                     for (ClienteConta cc : clienteConta) {
                         if (cc.getConta() instanceof ContaCorrente) {
@@ -154,6 +161,14 @@ public class Main {
                     System.out.println("\nClientes: \n" + clientes);
                     break;
 
+                case 5:
+                    System.out.println("\t |-- Funcionarios Do Banco |--");
+                    for (Funcionario f: funcionarios) {
+                        System.out.println("Nome: " + f.getNome() + " | Cargo: " + f.getCargo());
+                    }
+
+                    break;
+
             }
 
             continuar = sc.nextLine();
@@ -169,15 +184,16 @@ public class Main {
         System.out.println("O que deseja fazer?\n");
         System.out.println(
                 "1 - Adicionar novo cliente\n" +
-                        "2 - Adicionar nova conta\n" +
-                        "3 - Realizar operação em conta existente\n" +
-                        "4 - Mostrar Dados da conta\n" +
-                        "0 - Salvar e Sair\n"
+                        "2 - Adicionar nova conta.\n" +
+                        "3 - Realizar operação em conta existente.\n" +
+                        "4 - Mostrar Dados da conta.\n" +
+                        "5 - Exibir funcionarios. \n" +
+                        "0 - Salvar e Sair.\n"
         );
 
         int escolha = sc.nextByte();
 
-        while (escolha < 0 || escolha > 6) {
+        while (escolha < 0 || escolha > 7) {
             System.out.println("\n Escolha inválida. Digite sua escolha novamente:");
             escolha = sc.nextInt();
         }
@@ -291,8 +307,7 @@ public class Main {
                 System.out.printf(e.getMessage());
             }
         }else{
-
-            initialize();
+            menuOperacoes();
         }
 
         // cadastro da conta
@@ -330,10 +345,10 @@ public class Main {
 
             case 1: // Conta poupança
 
-                agencia = escolheAgencia();
-
                 System.out.println("Digite a senha de 4 numeros da conta");
                 senha = sc.nextInt();
+
+                agencia = escolheAgencia();
 
                 // gerando a conta poupança
                 ContaPoupanca newContaP = new ContaPoupanca(clienteConta.size() + 1, senha, agencia);
@@ -406,13 +421,10 @@ public class Main {
 
     // ************************* OPERAÇÕES BANCÁRIAS ************************* //
 
-    public static void efetuaSaque(){
+    public static void efetuaSaque(Conta conta){
         Scanner sc = new Scanner(System.in);
         int verifyError = -1, senha;
         double valor;
-        Conta conta = null;
-
-        conta = confirmaSenhaEConta();
 
         while (verifyError != 0) {
             System.out.println("Insira o valor do saque: ");
@@ -427,12 +439,12 @@ public class Main {
             } catch (SemSaldoException e) {
                 JOptionPane.showMessageDialog(null, e.getMessage());
                 System.out.println(e.getMessage());
-                verifyError = 1;
+                break;
 
             } catch (ContaDesativadaException e) {
                 JOptionPane.showMessageDialog(null, e.getMessage());
                 System.out.println(e.getMessage());
-                verifyError = 2;
+                break;
 
             } catch (ValorInvalidoException e) {
                 JOptionPane.showMessageDialog(null, e.getMessage());
@@ -447,11 +459,10 @@ public class Main {
             }
         }
     }
-    public static void efetuaDeposito(){
+    public static void efetuaDeposito(Conta conta){
         Scanner sc = new Scanner(System.in);
         int verifyError = -1, senha;
         double valor;
-        Conta conta = null;
 
         while (verifyError != 0) {
 
@@ -475,16 +486,16 @@ public class Main {
             }
 
             if (verifyError == 0) {
+                JOptionPane.showMessageDialog(null, "Operação Efetuada com sucesso! ");
                 System.out.println("Operação Efetuada com sucesso! \nPressione enter para continuar...");
             }
         }
     }
 
-    public static void efetuaPagamento(){
+    public static void efetuaPagamento(Conta conta){
         Scanner sc = new Scanner(System.in);
         int verifyError = -1, senha;
         double valor;
-        Conta conta = null;
 
         while (verifyError != 0) {
 
@@ -522,22 +533,21 @@ public class Main {
             }
 
             if (verifyError == 0) {
+                JOptionPane.showMessageDialog(null, "Operação Efetuada com sucesso! ");
                 System.out.println("Operação realizada com sucesso! \nPressione enter para continuar...");
             }
         }
 
     }
 
-    public static void consultarSaldo(){
+    public static void consultarSaldo(Conta conta){
         Scanner sc = new Scanner(System.in);
         int verifyError = -1, senha;
         double valor;
-        Conta conta = null;
+
         String meio = escolheMeio();
 
         while (verifyError != 0) {
-            System.out.println("Digite a senha novamente:");
-            senha = sc.nextInt();
 
             try {
                 conta.consultarSaldo(meio);
@@ -549,7 +559,6 @@ public class Main {
             }
 
             if (verifyError == 0) {
-                System.out.printf("Saldo Atual: R$ %.2f\n", conta.getSaldoAtual());
                 System.out.println("Pressione enter para continuar...");
             }
         }

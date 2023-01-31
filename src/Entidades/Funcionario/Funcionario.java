@@ -3,11 +3,12 @@ package Entidades.Funcionario;
 import Entidades.Pessoa;
 
 import java.io.Serializable;
+import java.time.LocalDate;
 import java.util.Date;
 import DataObjects.*;
 
 
-public class Funcionario extends Pessoa implements Serializable {
+public class Funcionario extends Pessoa implements Serializable, CalculoSalarial, CurrentDate {
     private String rg;
     private String numeroCTPS;
     private char sexo;//M ou F
@@ -83,5 +84,18 @@ public class Funcionario extends Pessoa implements Serializable {
         this.dataDeIngresso = dataDeIngresso;
     }
 
+    @Override
+    public void calculaSalario(double salario) {
+        String dataExtenso = CurrentDate.showDate(dataDeIngresso);
+        String []data = new String[3];
+        data =  dataExtenso.split("/");
+        int anoAtual = LocalDate.now().getYear();
+        int anoDeIngresso = Integer.parseInt(data[2]);
 
+        if(anoAtual - anoDeIngresso >= 15){
+            setSalario(salario * 1.10);
+        }else{
+            setSalario(salario);
+        }
+    }
 }

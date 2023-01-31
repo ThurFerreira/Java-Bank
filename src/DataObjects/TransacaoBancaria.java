@@ -27,6 +27,10 @@ public class TransacaoBancaria implements Serializable{
         this.canalPorOndeFoiFeita = meio;
     }
 
+    public TransacaoBancaria (Conta conta, Date data){//????????????? 3-C
+
+    }
+
     public double getValorTransacoesBancariasTransacao() {
         return valorTransacao;
     }
@@ -54,6 +58,7 @@ public class TransacaoBancaria implements Serializable{
     @Override
     public String toString() {
         String tipo = null;
+
         if(this.tipoDaTransacao == 1){
             tipo = "Saque";
 
@@ -62,8 +67,8 @@ public class TransacaoBancaria implements Serializable{
 
         }else if(this.tipoDaTransacao == 4){
             tipo = "Pagamento";
-
         }
-        return "[ Valor da Transação: " + valorTransacao + ", Tipo da Transação: " + tipo + ", Data da Transação: " + dataDaTransacao + ", Meio: " + canalPorOndeFoiFeita + " ]";
+
+        return "[ Valor da Transação: " + valorTransacao + ", Tipo da Transação: " + tipo + ", Data da Transação: " + CurrentDate.showDate(dataDaTransacao) + ", Meio: " + canalPorOndeFoiFeita + " ]";
     }
 }

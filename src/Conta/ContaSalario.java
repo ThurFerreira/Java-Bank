@@ -46,8 +46,9 @@ public class ContaSalario extends Conta implements Serializable {
             super.saldoAtual -= valor;
             TransacaoBancaria novaTransacao = new TransacaoBancaria(valor, 1, canal);
             historico.add(novaTransacao);
+            ultimaMovimentacao = novaTransacao;
 
-        }else{
+        }else if(valor < 0d){
             throw new ValorInvalidoException();
         }
     }

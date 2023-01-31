@@ -1,6 +1,5 @@
 package Entidades;
 
-import DataObjects.CurrentDate;
 import DataObjects.Endereco;
 
 import java.io.Serializable;
@@ -19,7 +18,6 @@ public abstract class Pessoa implements Serializable {
         this.endereco = endereco;
         this.dataNascimento = dataNascimento;
     }
-
     private String cpfError() {
         return "CPF Error!";
     }

@@ -8,10 +8,10 @@ import java.util.Date;
 
 public interface TransacoesBancarias {
 
-    public void sacar(double valor, String canal) throws SemSaldoException, ContaDesativadaException, ValorInvalidoException;
-    public void depositar(double valor, String canal) throws ContaDesativadaException, ValorInvalidoException;
+    void sacar(double valor, String canal) throws SemSaldoException, ContaDesativadaException, ValorInvalidoException;
+    void depositar(double valor, String canal) throws ContaDesativadaException, ValorInvalidoException;
 
-    public int consultarSaldo(String canal) throws ContaDesativadaException;
+    int consultarSaldo(String canal) throws ContaDesativadaException;
 
     void efetuarPagamento(double valor, String canal, Date dataPagamento) throws SemSaldoException, ContaDesativadaException, ValorInvalidoException;
 }

@@ -15,6 +15,18 @@ public class Cliente extends Pessoa implements Serializable {
         this.escolaridade = escolaridade;
     }
 
+    public Cliente(String nome, String cpf){
+        super(cpf, nome, null, null);
+        this.estadoCivil = null;
+        this.escolaridade = null;
+    }
+
+    public Cliente(){
+        super(null, null, null, null);
+        this.estadoCivil = null;
+        this.escolaridade = null;
+    }
+
     public String getEstadoCivil() {
         return estadoCivil;
     }
@@ -31,7 +43,7 @@ public class Cliente extends Pessoa implements Serializable {
         this.escolaridade = escolaridade;
     }
 
-    @Override
+      @Override
     public String toString() {
         return super.toString() +
                 "estadoCivil='" + estadoCivil + '\'' +
