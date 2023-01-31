@@ -1,5 +1,6 @@
 package Conta;
 
+import java.text.SimpleDateFormat;
 import java.util.*;
 
 import DataObjects.Agencia;
@@ -10,6 +11,7 @@ import Exceptions.SemSaldoException;
 import Exceptions.SenhaIncorretaException;
 import Exceptions.ValorInvalidoException;
 
+import javax.swing.*;
 import java.io.Serializable;
 
 
@@ -66,9 +68,8 @@ public abstract class Conta implements TransacoesBancarias, Serializable {
     }
 
     @Override
-    public void sacar(int senha, double valor, String meio) throws SenhaIncorretaException, SemSaldoException, ContaDesativadaException, ValorInvalidoException {
+    public void sacar(double valor, String meio) throws SemSaldoException, ContaDesativadaException, ValorInvalidoException {
         isActive();
-        confirmaSenha(senha);
         verificaSaldo(valor);
 
         //verificando valor a ser sacado
@@ -83,9 +84,8 @@ public abstract class Conta implements TransacoesBancarias, Serializable {
     }
 
     @Override
-    public void depositar(int senha, double valor, String meio) throws SenhaIncorretaException, ContaDesativadaException, ValorInvalidoException{
+    public void depositar(double valor, String meio) throws ContaDesativadaException, ValorInvalidoException{
         isActive();
-        confirmaSenha(senha);
 
         //verificando valor a ser depositado
         if(valor > 0.0){
@@ -99,9 +99,8 @@ public abstract class Conta implements TransacoesBancarias, Serializable {
     }
 
     @Override
-    public int consultarSaldo(int senha, String meio) throws SenhaIncorretaException, ContaDesativadaException {
+    public int consultarSaldo(String meio) throws ContaDesativadaException {
         isActive();
-        confirmaSenha(senha);
 
         System.out.printf("R$ %.2f\n", this.saldoAtual);
         TransacaoBancaria novaTransacao = new TransacaoBancaria(0, 3, meio);
@@ -111,9 +110,8 @@ public abstract class Conta implements TransacoesBancarias, Serializable {
     }
 
     @Override
-    public void efetuarPagamento(int senha, double valor, String meio, Date dataPagamento) throws SenhaIncorretaException, SemSaldoException, ContaDesativadaException, ValorInvalidoException {
+    public void efetuarPagamento(double valor, String meio, Date dataPagamento) throws SemSaldoException, ContaDesativadaException, ValorInvalidoException {
         isActive();
-        confirmaSenha(senha);
         verificaSaldo(valor);
 
         if(valor > 0d){
@@ -159,14 +157,14 @@ public abstract class Conta implements TransacoesBancarias, Serializable {
             estadoDaConta = "Inativa";
         }
 
-        System.out.println(
+       JOptionPane.showMessageDialog(null,
                 "\n Numero da Conta: " + numeroConta +
                 "\n Estado da Conta: " + estadoDaConta +
                 "\n Saldo Atual: " + saldoAtual +
-                "\n Data de abertura da Conta: " + dataAberturaConta +
+                "\n Data de abertura da Conta: " + CurrentDate.showDate(dataAberturaConta) +
                 "\n Ultima Movimentação: '" + ultimaMovimentacao + '\'' +
                 "\n Agencia: " + agencia.toString()
-        );
+       );
     }
 
     public void mostraHistorico(){
@@ -175,7 +173,7 @@ public abstract class Conta implements TransacoesBancarias, Serializable {
             System.out.println("Histórico de transação vazio!");
         }else{
             for (TransacaoBancaria t: historico) {
-                System.out.println(i + " - " + t.toString());
+                System.out.println(i + " - " + t.toString() + "\n");
                 i++;
             }
         }

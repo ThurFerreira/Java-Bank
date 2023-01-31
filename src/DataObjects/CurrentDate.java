@@ -12,7 +12,7 @@ public class CurrentDate extends Date{
     }
 
     public static String showDate(Date date){
-        SimpleDateFormat formatter = new SimpleDateFormat("dd-MM-yyyy");//format patter
+        SimpleDateFormat formatter = new SimpleDateFormat("dd/MM/yyyy");//format patter
         return formatter.format(date);
     }
 }

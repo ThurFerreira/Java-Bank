@@ -37,9 +37,8 @@ public class ContaSalario extends Conta implements Serializable {
     }
 
     @Override
-    public void sacar(int senha, double valor, String canal) throws SenhaIncorretaException, SemSaldoException, ContaDesativadaException, ValorInvalidoException {
+    public void sacar(double valor, String canal) throws SemSaldoException, ContaDesativadaException, ValorInvalidoException {
         isActive();
-        confirmaSenha(senha);
         verificaSaldo(valor);
 
         //verificando valor a ser sacado
